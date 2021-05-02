@@ -19,13 +19,13 @@ Addition
 ------------------------------------------------------
 Nutritional Information
 - ID
-- Calories
-- Saturated Fat
-- Trans Fat
-- Carbohydrates
-- Sucker
-- Protein 
-- Salt
+- calories
+- saturated Fat
+- trans Fat
+- carbohydrates
+- sucker
+- protein 
+- salt
 ------------------------------------------------------
 Product
 - ID

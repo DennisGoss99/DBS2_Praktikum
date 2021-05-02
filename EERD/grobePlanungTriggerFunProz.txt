@@ -1,0 +1,26 @@
+Trigger: (bitte englische Namen erfinden)
+
+1. WaffleIngredient hinzufügt -> Rechnen wir die NutritionalInformation aus
+2. ProductOrder hinzufügt -> In Order total Amount ändern
+3. Waffle ändert sich -> Waffle creationDate auf jetzt setzen
+4. Inventory expiryDate ist in der Vergangenheit -> werfe expetion
+5. Inventory deliveryDate ist in der Vergangenheit oder zukunft -> auf heute setzen
+5. Order date ist in der Vergangenheit oder zukunft -> auf heute setzen
+6. Order paymentStauts ist < 0 oder invalid -> Int auf 0 setzen
+7. WaffleIngredient amount == 0 -> werfe expetion
+8. WaffleIngredient wird verändert -> price wird neu errechnet
+9. WaffleIngredient wird hinzufügt -> price wird neu errechnet
+
+Funktion oder Prozedur: (bitte englische Namen erfinden)
+
+1. NETTO -> BRUTTO (return: int) //Wandelt ein NETTObetrag in netto + Mehrwertsteuer um.
+2. (return: int (healthy| semi healthy| not healthy)) // Funktion nimmt Nahrungswerte entgegen und prüft mit statik werten ob gesund
+3. (return: bool) // Gibt es noch genügent Material für die Waffle
+4. (Stadtname; return: int) // Gibt die anzahl der Läden zurück in der Stadt
+5. (WaffleID) // Gibt alle Ingredients (NAME, Amount) aus von einer WaffleID
+ 
+View: (bitte englische Namen erfinden)
+1. WaffleConstruction // Gibt eine alle Waffel aus (name, price, Zutatname, zutatanzahl, Messeinheit(g,ml oder ...))
+2. IngredientOverview // Gibt alle Ingredients aus (group by Damit wenn 2 mal Salz in Tablle addiert wird)
+
+??? Planen Sie mindestens eine View (in beiden DBS) mit einem INSTEAD-OFTrigger (nur Oracle).
