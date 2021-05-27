@@ -56,8 +56,8 @@ END finish_Ordner;
 
 
 -- FUN [clac_ordertime] -------------------------------------------------------------------------------
--- 	   input:  int IDORDER					% Nimmt als Input die BestellungsID an
---	   output: int sum(processingtime)		% Gibt die Bearbeitungszeit aller Bestellungen zurÃ¼ck
+-- 	   input:  int IDORDER							% Nimmt als Input die BestellungsID an
+--	   output: int sum(processingtime * amount)		% Gibt die Bearbeitungszeit aller Bestellungen zurÃ¼ck
 -- ----------------------------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION clac_ordertime (in_idorder IN INT)
@@ -80,16 +80,55 @@ END clac_ordertime;
 	-- TEST: clac_ordertime ------------------------------------------------------------------------
 	-- make sure valid Data is present
     
-    -- [1 TEST] orderid = 0
+    -- [1 TEST] idorder = 0
         begin
             dbms_output.put_line (clac_ordertime(0));
         end;
-    -- [2 TEST] orderid = 1
+    -- [2 TEST] idorder = 1
     
         begin
             dbms_output.put_line (clac_ordertime(1));
         end;
 	-- ---------------------------------------------------------------------------------------------
+
+
+
+-- FUN [clac_waffletime] -------------------------------------------------------------------------------
+-- 	   input:  int IDWAFFLE							% Nimmt als Input die WAFFFLEID an
+--	   output: int sum(processingtime * amount)		% Gibt die Bearbeitungszeit der Waffle zurÃ¼ck
+-- ----------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION clac_waffletime (in_idwaffle IN INT)
+RETURN INT
+IS
+ i_waffletime_in_s INT := 0;
+BEGIN
+
+SELECT SUM(ingredient.processingtimesec * amount) as time_in_s INTO i_waffletime_in_s
+    FROM WAFFLE
+    INNER JOIN WAFFLEINGREDIENT ON waffle.idwaffle = waffleingredient.idwaffle
+    INNER JOIN INGREDIENT ON ingredient.idingredient = waffleingredient.idingredient
+        WHERE waffle.idwaffle = in_idwaffle
+        GROUP BY waffle.idwaffle;
+
+RETURN i_waffletime_in_s;
+END clac_waffletime;
+/
+
+	-- TEST: clac_waffletime ------------------------------------------------------------------------
+	-- make sure valid Data is present
+    
+    -- [1 TEST] idwaffle = 0
+        begin
+            dbms_output.put_line (clac_waffletime(0));
+        end;
+    -- [2 TEST] idwaffle = 1
+    
+        begin
+            dbms_output.put_line (clac_waffletime(2));
+        end;
+	-- ---------------------------------------------------------------------------------------------
+
 
 
 

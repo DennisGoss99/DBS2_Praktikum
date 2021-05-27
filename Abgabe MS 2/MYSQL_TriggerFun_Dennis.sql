@@ -54,8 +54,8 @@
 
 
 -- FUN [clac_ordertime} -------------------------------------------------------------------------------
--- 	   input:  int IDORDER					% Nimmt als Input die BestellungsID an
---	   output: int sum(processingtime)		% Gibt die Bearbeitungszeit aller Bestellungen zurück
+-- 	   input:  int IDORDER							% Nimmt als Input die BestellungsID an
+--	   output: int sum(processingtime * amount)		% Gibt die Bearbeitungszeit aller Bestellungen zurück
 -- ----------------------------------------------------------------------------------------------------
 
 	DROP FUNCTION IF EXISTS clac_ordertime;
@@ -89,3 +89,44 @@
     -- [2 TEST] orderid = 1
 	SELECT clac_ordertime(1);
 	-- ---------------------------------------------------------------------------------------------
+    
+    
+    
+-- FUN [clac_waffletime} -------------------------------------------------------------------------------
+-- 	   input:  int IDWAFFLE							% Nimmt als Input die WAFFFLEID an
+--	   output: int sum(processingtime * amount)		% Gibt die Bearbeitungszeit der Waffle zurück
+-- ----------------------------------------------------------------------------------------------------
+
+
+	DROP FUNCTION IF EXISTS clac_waffletime;
+	DELIMITER //
+
+	CREATE FUNCTION clac_waffletime(
+		in_idwaffle INT
+	)
+	RETURNS INT
+	DETERMINISTIC
+	BEGIN
+		DECLARE i_waffletime_in_s INT;
+		
+SELECT SUM(ingredient.processingtimesec * amount) as time_in_s INTO i_waffletime_in_s
+    FROM WAFFLE
+    INNER JOIN WAFFLEINGREDIENT ON waffle.idwaffle = waffleingredient.idwaffle
+    INNER JOIN INGREDIENT ON ingredient.idingredient = waffleingredient.idingredient
+        WHERE waffle.idwaffle = in_idwaffle
+        GROUP BY waffle.idwaffle;
+		
+		Return i_waffletime_in_s;
+	END //
+
+	DELIMITER ;
+
+	-- TEST: clac_ordertime ------------------------------------------------------------------------
+	-- make sure valid Data is present
+    
+    -- [1 TEST] orderid = 0
+	SELECT clac_waffletime(0);
+    -- [2 TEST] orderid = 1
+	SELECT clac_waffletime(1);
+	-- ---------------------------------------------------------------------------------------------
+    
