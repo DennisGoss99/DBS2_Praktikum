@@ -1,0 +1,164 @@
+-- ------------------------------------------------------------------------- 
+-- DB2 - Lukas Momberg - 28.05.2021 @ 01:16
+-- ------------------------------------------------------------------------- 
+
+use WAFFLEDB;
+
+drop PROCEDURE IF EXISTS InventoryUpdate;
+
+DELIMITER $$ 
+
+-- - UpdateInventory('StoreName', 'Banane', 3, 'add')
+CREATE PROCEDURE InventoryUpdate 
+(
+    storeName VARCHAR(255),
+    ingredientName VARCHAR(255),
+    ingredientAmount INT,
+    calcModeString VARCHAR(255) -- add or sub
+)
+DETERMINISTIC
+BEGIN  
+
+   DECLARE v_storeID, 
+    v_ingreadientsID,
+     v_amountOfIngreadients,
+     v_ingreadientsSearchResults,
+    
+     v_currentIngredientAmount,
+     v_deleteID,
+     v_deleteAmount INT default 0;
+    
+    DECLARE  v_hasIngreadient BOOLEAN;
+       
+    -- Check if this store exist -----------------------------------------------
+    SELECT WAFFLESTORE.idstore INTO v_storeID
+        FROM WAFFLESTORE 
+        WHERE wafflestore.name LIKE storeName;
+   -- --------------------------------------------------------------------------
+        
+    -- Check if this ingridient already exists ---------------------------------    
+    SELECT count(*)INTO v_ingreadientsSearchResults FROM INGREDIENT WHERE INGREDIENT.NAME LIKE ingredientName;
+    
+    IF (v_ingreadientsSearchResults > 0) THEN         
+        SET v_hasIngreadient = TRUE;
+    ELSE
+        SET v_hasIngreadient = FALSE;
+    END IF;
+    -- -------------------------------------------------------------------------
+    
+    -- -------------------------------------------------------------------------
+    SELECT idingredient INTO v_ingreadientsID FROM INGREDIENT WHERE INGREDIENT.NAME LIKE ingredientName; 
+    -- -------------------------------------------------------------------------
+        
+    -- Count ingredient Amount -------------------------------------------------
+    SELECT count(*) INTO v_amountOfIngreadients
+    FROM INVENTORY
+    WHERE 
+    (
+        inventory.idingredient = v_ingreadientsID
+        AND
+        inventory.idstore = v_storeID   
+        AND
+        INVENTORY.expirydate >= sysDate() 
+    ); 
+    -- -------------------------------------------------------------------------
+    
+    -- Select Mode -------------------------------------------------------------    
+
+        IF  calcModeString like 'add' THEN      
+            IF v_hasIngreadient THEN     
+                -- Add new ingreadient -----------------------------------------
+                INSERT INTO INVENTORY 
+                (
+                    idInventory,
+                    idingredient,
+                    idStore,
+                    expirydate,                    
+                    deliverydate, 
+                    amount   ,
+                    isaccessible
+                )
+    
+                VALUES
+                (
+                    (select MAX(idInventory) from INVENTORY) +1,
+                    v_ingreadientsID,
+                    v_storeID,
+                    TO_DATE(current_date + 100),
+                    TO_DATE(current_date - 10), -- Today - 10 Days -> in 10 Days it is expired.
+                    ingredientAmount,
+                    1
+                );   
+                -- -------------------------------------------------------------
+                
+            ELSE
+                -- There is no Ingreadient, we can't add it---------------------
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No Ingredient With That Name'; 
+                -- -------------------------------------------------------------
+            END IF; 
+            
+        ELSeIF calcModeString like 'sub' THEN 
+            IF v_hasIngreadient THEN
+                IF v_amountOfIngreadients = ingredientAmount THEN
+                    -- We take the same amount of what is left -----------------
+                    DELETE FROM INVENTORY                    
+                          
+                    WHERE 
+                    (   
+                        inventory.idingredient = v_ingreadientsID
+                        AND
+                        inventory.idstore = v_storeID
+                    );
+                    -- ---------------------------------------------------------     
+                ELSEIF ingredientAmount < ingredientAmount THEN
+                    -- There are not enogh. Throw exeption. --------------------
+                    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Not Enogh Ingredients'; 
+                    -- ---------------------------------------------------------                     
+                ELSE                    
+                    -- There are enogh the take. -------------------------------    
+                    SET v_currentIngredientAmount = ingredientAmount;
+                    
+                    WHILE v_currentIngredientAmount > 0 DO
+                                            
+                        SELECT idinventory INTO v_deleteID FROM inventory
+                        WHERE 
+                        (
+                            inventory.idingredient = 0
+                            AND
+                            inventory.idstore = 0   
+                            AND
+                            INVENTORY.expirydate >= CURRENT_TIMESTAMP
+                        )
+                        LIMIT 1;                    
+                        
+                        -- Get amount
+                        SELECT amount INTO v_deleteAmount FROM inventory
+                        WHERE inventory.idinventory = v_deleteID;
+                        
+                        
+                        IF v_deleteAmount > v_currentIngredientAmount THEN
+                            -- Reduce amount
+                            UPDATE inventory SET amount = v_deleteAmount - v_currentIngredientAmount
+                            WHERE inventory.idinventory = v_deleteID;
+                        ELSE
+                            Delete from inventory 
+                            WHERE inventory.idinventory = v_deleteID;
+                        END IF;
+                        
+                        -- Reduce
+                        SET v_currentIngredientAmount = v_currentIngredientAmount - v_deleteAmount;                        
+                    END WHILE;                   
+                    -- ---------------------------------------------------------                
+                END IF;                
+            ELSE
+                -- ERROR - ingredient does not exist!
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No Ingredient With That Name'; 
+            END IF;            
+        ELSE                
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid Mode'; 
+     END IF;        
+    -- -------------------------------------------------------------------------    
+END$$
+
+DELIMITER ;
+

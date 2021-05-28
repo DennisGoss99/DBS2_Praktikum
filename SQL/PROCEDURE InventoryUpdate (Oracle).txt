@@ -1,0 +1,162 @@
+-- ------------------------------------------------------------------------- 
+-- DB2 - Lukas Momberg - 28.05.2021 @ 01:16
+-- ------------------------------------------------------------------------- 
+
+-- - UpdateInventory('StoreName', 'Banane', 3, 'add')
+CREATE OR REPLACE PROCEDURE InventoryUpdate 
+(
+    storeName IN VARCHAR2,
+    ingredientName  IN VARCHAR2,
+    ingredientAmount IN INT,
+    calcModeString IN VARCHAR -- add or sub
+)
+IS
+    v_storeID INT;
+    v_ingreadientsID INT;
+    v_hasIngreadient BOOLEAN;
+    v_amountOfIngreadients INT;
+    v_ingreadientsSearchResults INT;
+    
+    v_currentIngredientAmount INT;
+    v_deleteID INT;
+    v_deleteAmount INT;
+    
+    -- ErrorCodes --------------------------------------------------------------
+    NotEnoghIngredientsExeption EXCEPTION;
+    NoStoreWithThatNameExeption EXCEPTION;
+    InvalidModeExeption EXCEPTION;
+    NoIngredientWithThatNameExeption EXCEPTION;
+    -- -------------------------------------------------------------------------    
+BEGIN     
+    -- Check if this store exist -----------------------------------------------
+    SELECT WAFFLESTORE.idstore INTO v_storeID
+        FROM WAFFLESTORE 
+        WHERE wafflestore.name LIKE storeName;
+   -- --------------------------------------------------------------------------
+        
+    -- Check if this ingridient already exists ---------------------------------    
+    SELECT count(*)INTO v_ingreadientsSearchResults FROM INGREDIENT WHERE INGREDIENT.NAME LIKE ingredientName;
+    
+    IF v_ingreadientsSearchResults > 0 THEN         
+        v_hasIngreadient := TRUE;
+    ELSE
+        v_hasIngreadient := FALSE;
+    END IF;
+    -- -------------------------------------------------------------------------
+    
+    -- -------------------------------------------------------------------------
+    SELECT idingredient INTO v_ingreadientsID FROM INGREDIENT WHERE INGREDIENT.NAME LIKE ingredientName; 
+    -- -------------------------------------------------------------------------
+        
+    -- Count ingredient Amount -------------------------------------------------
+    SELECT count(*) INTO v_amountOfIngreadients
+    FROM INVENTORY
+    WHERE 
+    (
+        inventory.idingredient = v_ingreadientsID
+        AND
+        inventory.idstore = v_storeID   
+        AND
+        INVENTORY.expirydate >= sysDate() 
+    ); 
+    -- -------------------------------------------------------------------------
+    
+    -- Select Mode -------------------------------------------------------------    
+
+        IF  calcModeString like 'add' THEN      
+            IF v_hasIngreadient THEN     
+                -- Add new ingreadient -----------------------------------------
+                INSERT INTO INVENTORY 
+                (
+                    idInventory,
+                    idingredient,
+                    idStore,
+                    expirydate,                    
+                    deliverydate, 
+                    amount   ,
+                    isaccessible
+                )
+    
+                VALUES
+                (
+                    (select MAX(idInventory) from INVENTORY) +1,
+                    v_ingreadientsID,
+                    v_storeID,
+                    TO_DATE(current_date + 100),
+                    TO_DATE(current_date - 10), -- Today - 10 Days -> in 10 Days it is expired.
+                    ingredientAmount,
+                    1
+                );   
+                -- -------------------------------------------------------------
+                
+            ELSE
+                -- There is no Ingreadient, we can't add it---------------------
+                RAISE NoIngredientWithThatNameExeption;
+                -- -------------------------------------------------------------
+            END IF; 
+            
+        ELSIF calcModeString like 'sub' THEN 
+            IF v_hasIngreadient THEN
+                IF v_amountOfIngreadients = ingredientAmount THEN
+                    -- We take the same amount of what is left -----------------
+                    DELETE FROM INVENTORY                    
+                          
+                    WHERE 
+                    (   
+                        inventory.idingredient = v_ingreadientsID
+                        AND
+                        inventory.idstore = v_storeID
+                    );
+                    -- ---------------------------------------------------------     
+                ELSIF ingredientAmount < ingredientAmount THEN
+                    -- There are not enogh. Throw exeption. --------------------
+                    RAISE NotEnoghIngredientsExeption;
+                    -- ---------------------------------------------------------                     
+                ELSE                    
+                    -- There are enogh the take. -------------------------------    
+                    v_currentIngredientAmount := ingredientAmount;
+                    
+                    WHILE v_currentIngredientAmount > 0
+                    LOOP
+                        
+                        SELECT idinventory INTO v_deleteID FROM inventory
+                        WHERE 
+                        (
+                            inventory.idingredient = 0
+                            AND
+                            inventory.idstore = 0   
+                            AND
+                            INVENTORY.expirydate >= CURRENT_TIMESTAMP
+                        )
+                        FETCH NEXT 1 ROWS ONLY;                    
+                        
+                        -- Get amount
+                        SELECT amount INTO v_deleteAmount FROM inventory
+                        WHERE inventory.idinventory = v_deleteID;
+                        
+                        
+                        IF v_deleteAmount > v_currentIngredientAmount THEN
+                            -- Reduce amount
+                            UPDATE inventory SET amount = v_deleteAmount - v_currentIngredientAmount
+                            WHERE inventory.idinventory = v_deleteID;
+                        ELSE
+                            Delete from inventory 
+                            WHERE inventory.idinventory = v_deleteID;
+                        END IF;
+                        
+                        -- Reduce
+                        v_currentIngredientAmount := v_currentIngredientAmount - v_deleteAmount;                        
+                    END LOOP;                   
+                    -- ---------------------------------------------------------                
+                END IF;                
+            ELSE
+                -- ERROR - ingredient does not exist!
+                RAISE NoIngredientWithThatNameExeption;   
+            END IF;            
+        ELSE    
+            RAISE InvalidModeExeption;
+     END IF;        
+    -- -------------------------------------------------------------------------    
+END InventoryUpdate;
+/
+

@@ -1,0 +1,482 @@
+-- -----------------------------------------------------
+-- KONFIGURATION ANWEISUNG				    
+-- -----------------------------------------------------
+SET SERVEROUTPUT ON;
+ALTER SESSION SET nls_numeric_characters = '.,';
+
+-- -----------------------------------------------------
+-- DROP ANWEISUNG				    
+-- -----------------------------------------------------
+DROP TABLE Addition;
+DROP TABLE Inventory;
+DROP TABLE ProductOrder;
+DROP TABLE WaffleOrder;
+DROP TABLE WaffleStore;
+DROP TABLE WaffleIngredient;
+DROP TABLE Waffle;
+DROP TABLE Ingredient;
+DROP TABLE Product;
+DROP TABLE NutritionalInformation;
+
+DROP VIEW WaffleConstruction;
+DROP VIEW IngredientOverview;
+
+DROP TYPE waffle_t;
+DROP TYPE addition_t;
+DROP TYPE product_t;
+
+-- -----------------------------------------------------
+-- ADT Product
+-- -----------------------------------------------------
+CREATE OR REPLACE TYPE product_t AS OBJECT (
+  idProduct INT,
+  idNuIn INT,
+  price FLOAT,
+  name VARCHAR(255)
+) NOT FINAL;
+/
+
+-- -----------------------------------------------------
+-- ADT Waffle
+-- -----------------------------------------------------
+CREATE OR REPLACE TYPE waffle_t UNDER product_t (
+  idWaffle INT,
+  creatorName VARCHAR(255),
+  creationDate DATE,
+  processingTimeSec INT,
+  healty VARCHAR(255)
+)
+/
+
+-- -----------------------------------------------------
+-- ADT Addition
+-- -----------------------------------------------------
+CREATE OR REPLACE TYPE addition_t UNDER product_t (
+  idAddition INT,
+  optComment VARCHAR(255)
+)
+/
+
+-- -----------------------------------------------------
+-- Table NutritionalInformation
+-- -----------------------------------------------------
+CREATE TABLE NutritionalInformation (
+  idNuIn INT NOT NULL PRIMARY KEY,
+  calories FLOAT NULL,
+  saturatedFat FLOAT NULL,
+  transFat FLOAT NULL,
+  carbohydrates FLOAT NULL,
+  sugar FLOAT NULL,
+  protein FLOAT NULL,
+  salt FLOAT NULL
+);
+
+-- -----------------------------------------------------
+-- Table Product
+-- -----------------------------------------------------
+CREATE TABLE Product OF product_t (
+ idProduct PRIMARY KEY,
+ idNuIn NOT NULL,
+ price NOT NULL,
+ name NOT NULL,
+  CONSTRAINT fk_Product_NutritionalInformation1
+    FOREIGN KEY (idNuIn)
+    REFERENCES NutritionalInformation (idNuIn)
+);
+
+CREATE INDEX fk_Product_NutritionalInformation1_idx ON Product (idNuIn ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table Addition
+-- -----------------------------------------------------
+CREATE TABLE Addition OF addition_t (
+  idAddition NOT NULL PRIMARY KEY
+);
+
+-- -----------------------------------------------------
+-- Table Ingredient
+-- -----------------------------------------------------
+CREATE TABLE Ingredient (
+  idIngredient INT NOT NULL PRIMARY KEY,
+  idNuIn INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  unit VARCHAR(45) NOT NULL,
+  price FLOAT NULL,
+  processingTimeSec INT NOT NULL,
+  CONSTRAINT fk_Ingredient_NutritionalInformation1
+    FOREIGN KEY (idNuIn)
+    REFERENCES NutritionalInformation (idNuIn)
+);
+
+CREATE INDEX fk_Ingredient_NutritionalInformation1_idx ON Ingredient (idNuIn ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table Store
+-- -----------------------------------------------------
+CREATE TABLE WaffleStore (
+  idStore INT NOT NULL PRIMARY KEY,
+  name VARCHAR(255) NULL,
+  areaCode VARCHAR(15) NULL,
+  location VARCHAR(255) NULL,
+  streetName VARCHAR(255) NULL,
+  houseNumber VARCHAR(45) NULL
+);
+
+-- -----------------------------------------------------
+-- Table Inventory
+-- -----------------------------------------------------
+CREATE TABLE Inventory (
+  idInventory INT NOT NULL,
+  idIngredient INT NOT NULL,
+  idStore INT NOT NULL,
+  expiryDate DATE NULL,
+  deliveryDate DATE NOT NULL,
+  amount INT NOT NULL,
+  isAccessible NUMBER NOT NULL,
+  CONSTRAINT fk_Inventory_Ingredient
+    FOREIGN KEY (idIngredient)
+    REFERENCES Ingredient (idIngredient),
+  CONSTRAINT fk_Inventory_Store1
+    FOREIGN KEY (idStore)
+    REFERENCES WaffleStore (idStore),
+  CONSTRAINT pk_Invetory
+    PRIMARY KEY (idInventory)
+);
+
+CREATE INDEX fk_Inventory_Store1_idx ON Inventory (idStore ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table WaffleOrder
+-- -----------------------------------------------------
+CREATE TABLE WaffleOrder (
+  idOrder INT NOT NULL PRIMARY KEY,
+  idStore INT NOT NULL,
+  totalAmount DOUBLE PRECISION NULL,
+  paymentStatus INT NOT NULL,
+  orderDate DATE NOT NULL,
+  CONSTRAINT fk_Order_Store1
+    FOREIGN KEY (idStore)
+    REFERENCES WaffleStore (idStore)
+);
+
+CREATE INDEX fk_Waffle_Order_Store1_idx ON WaffleOrder (idStore ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table ProductOrder
+-- -----------------------------------------------------
+CREATE TABLE ProductOrder (
+  idOrder INT NOT NULL,
+  idProduct INT NOT NULL,
+  amount INT NULL,
+  calculatedTime INT NOT NULL,
+  CONSTRAINT fk_ProductOrder_Order1
+    FOREIGN KEY (idOrder)
+    REFERENCES WaffleOrder (idOrder),
+  CONSTRAINT fk_ProductOrder_Product1
+    FOREIGN KEY (idProduct)
+    REFERENCES Product (idProduct),
+  CONSTRAINT pk_ProductOrder
+    PRIMARY KEY (idOrder, idProduct)
+);
+
+CREATE INDEX fk_ProductOrder_Order1_idx ON ProductOrder (idOrder ASC) VISIBLE;
+
+CREATE INDEX fk_ProductOrder_Product1_idx ON ProductOrder (idProduct ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- Table Waffle
+-- -----------------------------------------------------
+CREATE TABLE Waffle OF waffle_t(
+  idWaffle NOT NULL PRIMARY KEY,
+  creationDate NOT NULL
+);
+
+-- -----------------------------------------------------
+-- Table WaffleIngredient
+-- -----------------------------------------------------
+CREATE TABLE WaffleIngredient (
+  idIngredient INT NOT NULL,
+  idWaffle INT NOT NULL,
+  amount INT NOT NULL,
+  CONSTRAINT fk_WaffleRecept_Ingredient1
+    FOREIGN KEY (idIngredient)
+    REFERENCES Ingredient (idIngredient),
+  CONSTRAINT fk_WaffleRecept_Waffle1
+    FOREIGN KEY (idWaffle)
+    REFERENCES Waffle (idWaffle),
+  CONSTRAINT pk_WaffleIngredient
+    PRIMARY KEY (idIngredient, idWaffle)
+);
+
+CREATE INDEX fk_WaffleRecept_Ingredient1_idx ON WaffleIngredient (idIngredient ASC) VISIBLE;
+
+CREATE INDEX fk_WaffleRecept_Waffle1_idx ON WaffleIngredient (idWaffle ASC) VISIBLE;
+
+-- -----------------------------------------------------
+-- View WaffleConstruction
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW WaffleConstruction AS
+SELECT Waffle.name as product_name, Waffle.price as price, Ingredient.name as ingredient_name, WaffleIngredient.amount as amount, Ingredient.unit as unit FROM Waffle
+Inner join WaffleIngredient on
+	Waffle.idWaffle = WaffleIngredient.idWaffle
+Inner join Ingredient on
+	WaffleIngredient.idIngredient = Ingredient.idIngredient
+order by product_name;
+
+-- -----------------------------------------------------
+-- View IngredientOverview
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW IngredientOverview AS
+select Ingredient.name as ingredient_name, sum(Inventory.amount) as inventory_amount, Ingredient.unit as ingredient_unit, WaffleStore.name as wafflestore_name from Ingredient
+left join Inventory on
+	Ingredient.idIngredient = Inventory.idIngredient
+inner join WaffleStore on
+	WaffleStore.idStore = Inventory.idStore
+Where Inventory.expiryDate < CURRENT_DATE
+group by Inventory.idStore, WaffleStore.name, Ingredient.name, Ingredient.unit
+order by Ingredient.name;
+
+
+-- -----------------------------------------------------
+-- INSERTS
+-- -----------------------------------------------------
+INSERT INTO NutritionalInformation (idNuIn, calories, saturatedFat, transFat, carbohydrates, sugar, protein, salt)
+    VALUES (1, 300, 2, 2, 5, 10, 5, 1);
+    
+INSERT INTO NutritionalInformation (idNuIn, calories, saturatedFat, transFat, carbohydrates, sugar, protein, salt)
+    VALUES (2, 450, 2, 2, 5, 10, 5, 1);
+    
+INSERT INTO NutritionalInformation (idNuIn, calories, saturatedFat, transFat, carbohydrates, sugar, protein, salt)
+    VALUES (3, 500, 10, 10, 10, 10, 10, 10);
+
+INSERT INTO INGREDIENT (idIngredient, idNuIn, name, unit, price, processingTimeSec)
+    VALUES (1, 1, 'Banane', 'g', 0.5, 3);
+    
+INSERT INTO INGREDIENT (idIngredient, idNuIn, name, unit, price, processingTimeSec)
+    VALUES (2, 2, 'Schoko', 'g', 1, 3);
+    
+INSERT INTO INGREDIENT (idIngredient, idNuIn, name, unit, price, processingTimeSec)
+    VALUES (3, 3, 'Apfel', 'g', 1, 3);
+
+INSERT INTO Waffle 
+    VALUES (waffle_t(1, 1, 10, 'BananenWaffel', 1, 'Gustav', to_date('30.12.2020', 'dd.MM.yyyy'), NULL, NULL));
+
+INSERT INTO Waffle 
+    VALUES (waffle_t(2, 2, 15, 'SchokoWaffel', 2, 'Gustav', to_date('30.12.2020', 'dd.MM.yyyy'), NULL, NULL));
+
+INSERT INTO Waffle 
+    VALUES (waffle_t(3, 3, 15, 'MegaSchokoWaffel', 3, 'Gustav', to_date('30.12.2020', 'dd.MM.yyyy'), NULL, NULL));
+
+INSERT INTO WAFFLEINGREDIENT(idIngredient, idWaffle, amount)
+    VALUES (1, 1, 10);
+    
+INSERT INTO WAFFLEINGREDIENT(idIngredient, idWaffle, amount)
+    VALUES (2, 2, 5);   
+    
+INSERT INTO WAFFLEINGREDIENT(idIngredient, idWaffle, amount)
+    VALUES (3, 3, 5); 
+
+INSERT INTO WaffleStore (idStore, name, areaCode, location, streetName, houseNumber)
+    VALUES (1, 'Waffle GMBH', '58540', 'Meinerzhagen', 'Oststraße', '38');
+    
+INSERT INTO INVENTORY(idIngredient, idStore, expiryDate, deliveryDate, amount, isAccessible)
+    VALUES (1, 1, to_date('30.12.2020', 'dd.MM.yyyy'), to_date('30.01.2020', 'dd.MM.yyyy'), 10, 1);
+
+COMMIT;    
+
+
+
+-- -----------------------------------------------------
+-- Prozeduren
+-- -----------------------------------------------------
+
+-- ---------------------------------------
+-- Erste Prozedur: Benachrichtigen 	--
+-- ---------------------------------------
+Create or Replace PROCEDURE Benachrichtigen (nachricht IN VARCHAR2, zutat IN NUMBER, store IN NUMBER) 
+IS 
+	sname VARCHAR(255);
+	zname VARCHAR(255);
+BEGIN
+    SELECT w.name INTO sname FROM WaffleStore w WHERE idStore = store;
+    SELECT name INTO zname FROM INGREDIENT if WHERE if.idingredient = zutat;
+    
+    IF nachricht ='niedrig' THEN
+        DBMS_OUTPUT.PUT_LINE('Angestellte des Geschäfts '||sname||'. Bitte '|| zname ||' nachbestellen');
+    ELSIF nachricht='abgelaufen' THEN
+        DBMS_OUTPUT.PUT_LINE('Angestellte des Geschäfts '||sname||'. Bitte ' ||''|| zname ||' entsorgen');
+    ELSIF nachricht='gesperrt' THEN
+         DBMS_OUTPUT.PUT_LINE('Angestellte des Geschäfts ' || sname || ', ' || zname || ' ist bis auf weiteres gesperrt');
+    END IF;
+END;
+/
+
+-- ---------------------------------------
+-- Zweite Prozedur: Lager aktualisieren
+-- ---------------------------------------
+
+-- -----------------------------------------------------
+-- Funktionen
+-- -----------------------------------------------------
+
+-- ---------------------------------------
+-- Erste Funktion: Preiswertrechner 	--
+-- ---------------------------------------
+CREATE OR REPLACE FUNCTION Preiswertrechner(nettoPreis IN NUMBER, mwst IN NUMBER DEFAULT 0.19)
+    RETURN NUMBER
+    IS
+        Ergebnis NUMBER;
+    BEGIN
+        Ergebnis := nettoPreis * (1 + mwst);
+        RETURN ROUND(Ergebnis, 2);
+    END;
+/
+
+-- ---------------------------------------
+-- Zweite Funktion: Nährwertrechner 	--
+-- ---------------------------------------
+CREATE OR REPLACE FUNCTION Nährwertrechner(waffleName IN VARCHAR, healtyCalories IN NUMBER DEFAULT 350, healtySugar IN NUMBER DEFAULT 10)
+    RETURN VARCHAR
+    IS
+        v_calories FLOAT NULL;
+        v_saturatedFat FLOAT NULL;
+        v_transFat FLOAT NULL;
+        v_carbohydrates FLOAT NULL;
+        v_sugar FLOAT NULL;
+        v_protein FLOAT NULL;
+        v_salt FLOAT NULL;
+        v_idNui INTEGER;
+        Ergebnis VARCHAR2(64);
+    BEGIN
+        SELECT idNuIn INTO v_idNui FROM Waffle w WHERE w.name = waffleName;
+    
+        SELECT CALORIES, SATURATEDFAT, TRANSFAT, CARBOHYDRATES, SUGAR, PROTEIN, SALT 
+        INTO  v_calories, v_saturatedFat, v_transFat, v_carbohydrates, v_sugar, v_protein, v_salt 
+        FROM NutritionalInformation 
+        WHERE idNuIn = v_idNui;
+        
+        IF v_calories > healtyCalories OR v_sugar > healtySugar THEN
+            IF v_transFat > 3 OR v_saturatedFat > 15 OR v_salt > 10 THEN
+                Ergebnis := 'Ungesund';
+            ELSE
+                Ergebnis := 'Mäßig Gesund';
+            END IF;
+        ELSE
+            Ergebnis := 'Gesund';
+        END IF;
+        
+        Return Ergebnis;
+    END;
+/
+
+-- ---------------------------------------
+-- Dritte Funktion: Bestellzeitaufwand 	--
+-- ---------------------------------------
+
+-- -----------------------------------------------------
+-- Trigger
+-- -----------------------------------------------------
+
+-- ---------------------------------------
+-- Erster Trigger: Bestandsänderung 	--
+-- ---------------------------------------
+CREATE OR REPLACE TRIGGER OnInventoryUpdate
+    BEFORE UPDATE ON INVENTORY
+    FOR EACH ROW
+    WHEN (New.Amount <> Old.Amount)
+    DECLARE
+        id NUMBER(1) := :New.idIngredient;
+        store NUMBER(1) := :New.idStore;
+    BEGIN
+    
+        IF :New.amount < 2 THEN
+            :new.isAccessible := 0;
+            Benachrichtigen('gesperrt', id, store);
+        ELSIF :New.amount < 5 THEN
+            Benachrichtigen('niedrig', id, store);
+        ELSIF :New.amount > 5 THEN
+            :new.isAccessible := 0;
+        END IF;
+    END;
+/
+
+-- ---------------------------------------
+-- Zweiter Trigger: Bestellung erhalten --
+-- ---------------------------------------
+CREATE OR REPLACE TRIGGER OnOrderCreationOrUpdate
+    AFTER INSERT OR UPDATE ON PRODUCTORDER
+    FOR EACH ROW
+    DECLARE
+        productName VARCHAR(255);
+        processTime INT;
+    BEGIN
+        SELECT name INTO productName FROM WAFFLE Where idProduct = :New.idProduct;
+        SELECT processingTimeSec INTO processTime FROM WAFFLE Where idProduct = :New.idProduct;
+    
+        -- LAGER AKTUALISIEREN: PROCEDURE LAGERAKTUALISIEREN(productName, :new.amount)
+        -- Zeit berechnen: :New.calculatedTime := processingTimeSec
+    END;
+/
+
+-- ---------------------------------------
+-- Dritter Trigger: Bestellung abges.   --
+-- ---------------------------------------
+
+-- ---------------------------------------
+-- Vierter Trigger: Lebensmittel abgel. --
+-- ---------------------------------------
+CREATE OR REPLACE TRIGGER OnInventoryUpdate
+    BEFORE INSERT OR UPDATE ON Inventory
+    FOR EACH ROW 
+DECLARE
+	id NUMBER(1) := :new.idIngredient;
+	store NUMBER(1) := :new.idStore;
+BEGIN 
+    IF :new.expirydate < Sysdate THEN
+        Benachrichtigen('abgelaufen', id, store);
+    END IF;
+    
+END;
+/
+
+-- ---------------------------------------
+-- Fünfter Trigger: Zutat hinzug. / Update
+-- ---------------------------------------
+
+-- ---------------------------------------
+-- Sechster Trigger: Waffel hinzug. / Update ==> AKTUELL FALSCH
+-- ---------------------------------------
+CREATE OR REPLACE TRIGGER OnWaffleCreationOrUpdate
+    BEFORE INSERT OR UPDATE ON WAFFLE
+    FOR EACH ROW
+    BEGIN
+        :New.creationDate := SYSDate;
+        -- Zeitaufwand berechnen: :New.ProcessingTimeSec := FUNKTION Bestellzeitaufwand Berechnen
+        :New.healty := Nährwertrechner(:New.name);
+    END;
+/
+
+-- ---------------------------------------
+-- Instead of Trigger: WaffleConstruction
+-- ---------------------------------------
+CREATE OR REPLACE TRIGGER OnWaffleConstructionInsertOrUpdate
+    INSTEAD OF UPDATE ON WaffleConstruction
+    FOR EACH ROW
+    BEGIN
+        UPDATE WAFFLE w SET w.name = :new.product_name
+        WHERE name = :old.product_name;
+        
+        UPDATE WAFFLE w SET w.price = :new.price
+        WHERE price = :old.price;
+        
+        UPDATE INGREDIENT i SET i.name = :new.ingredient_name
+        WHERE name = :old.ingredient_name;
+         
+        UPDATE WaffleIngredient SET amount = :new.amount
+        WHERE amount = :old.amount;
+        
+        UPDATE INGREDIENT SET unit = :new.unit
+        WHERE unit = :old.unit;
+    END;
+/
+

@@ -1,0 +1,32 @@
+
+-- [Test] Add stuff
+begin
+
+InventoryUpdate('Waffle GMBH', 'BananeE', 60, 'sub');
+commit;
+
+end;
+
+-- [Test] Remove stuff
+begin
+
+InventoryUpdate('Waffle GMBH', 'Banane', 20, 'sub');
+commit;
+
+end;
+
+-- [Test] Invalid ingredient name
+begin
+
+InventoryUpdate('Waffle GMBH', 'Bananenenne', 2, 'sub');
+commit;
+
+end;
+
+-- [Test] Invalid store name
+begin
+
+InventoryUpdate('Waffle G', 'Bananenenne', 12, 'add');
+commit;
+
+end;

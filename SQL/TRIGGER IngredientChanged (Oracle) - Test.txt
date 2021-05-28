@@ -1,0 +1,30 @@
+BEGIN   
+    -- [Test] Add something
+    INSERT INTO WAFFLEINGREDIENT 
+    (
+        idIngredient, 
+        idWaffle, 
+        amount
+    )
+    VALUES
+    (
+        0,
+        1,
+        10
+    );
+END;
+
+BEGIN
+    -- [Test] Delete something (Problem: Cant change itself(Table) while using)
+    DELETE FROM WAFFLEINGREDIENT WHERE idIngredient = 1;
+END;
+
+-- [Test] Update something
+BEGIN
+    UPDATE WAFFLEINGREDIENT 
+    SET amount = 10 
+    WHERE 
+        idIngredient = 2
+    AND
+        amount < 5;
+END;

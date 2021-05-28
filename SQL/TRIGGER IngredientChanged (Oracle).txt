@@ -1,0 +1,17 @@
+drop TRIGGER IngredientChanged;
+
+CREATE OR REPLACE TRIGGER IngredientChanged
+
+AFTER INSERT OR DELETE OR UPDATE ON WAFFLEINGREDIENT 
+
+for each row 
+
+BEGIN     
+    UPDATE Product set price =
+    (
+        select sum(price * amount) as totalprice from WAFFLEINGREDIENT
+        
+        left join INGREDIENT ON WAFFLEINGREDIENT.idingredient = INGREDIENT.idIngredient        
+    );
+    
+END;
