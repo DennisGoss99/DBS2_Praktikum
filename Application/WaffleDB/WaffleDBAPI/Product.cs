@@ -1,10 +1,10 @@
 ﻿namespace WaffleDB
 {
-    class Product
+    public class Product
     {
-        public int ID { get; set; }
-        public int IDNutritionInformation { get; set; }
-        public float Price { get; set; }
-        public string Name { get; set; }
+        public int idProduct { get; set; }
+        public int idNuIn { get; set; }
+        public float price { get; set; }
+        public string name { get; set; }
     }
 }
