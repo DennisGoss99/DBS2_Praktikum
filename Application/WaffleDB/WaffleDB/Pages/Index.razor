@@ -1,13 +1,40 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<style>
+    .buttonDiv {
+        border-style: solid;
+        border-width: 2px;
+        border-color: #606060;
+        border-radius: 5px;
+        padding: 20px;
+        width: auto;
+        display: inline-block;
+        position: relative;
+        height: auto;
+        text-align: center;
+        box-shadow: 6px 6px 10px silver;
+        background: #FAFAFA;
+    }
+</style>
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
 
-<MatTextField Value="_test"></MatTextField>
+<div style="text-align: center">
 
+    <MatH2>Willkommen zu WaffleDB!</MatH2>
+    <p>
+        <img style="margin-top: 10px;" src="Images/waffelDB.png" asp-append-version="true" width="250" />
+    </p>
+    
+    
+
+
+    <div style="margin-top: 10px;" class="buttonDiv">
+        <b>Waffel bestellen</b>
+        <MatIcon Style="position: relative; top:5px;" Icon="local_dining"></MatIcon>
+    </div>
+
+</div>
 @code
 {
     private string _test = "test";
