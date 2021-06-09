@@ -8,10 +8,10 @@ namespace WaffleDBAPITest
     {
         static int Main()
         {
-            PrintfAllWaffles();
+            PrintfAll(WaffleDBAPI.Waffles);
 
             //AddWaffle(); // <--- fails cuz there is no product with that ID
-
+            Console.ReadKey();
             return 0;
         }
 
@@ -22,15 +22,13 @@ namespace WaffleDBAPITest
             WaffleDBAPI.InsertEntry(newWaffle);
         }
 
-        private static void PrintfAllWaffles()
+        private static void PrintfAll<T>(List<T> list)
         {
-            List<Waffle> waffleList = WaffleDBAPI.Waffles;
+            Console.WriteLine(typeof(T).ToString());
 
-            Console.WriteLine("Waffles");
-
-            foreach (Waffle waffle in waffleList)
+            foreach (T objects in list)
             {
-                Console.WriteLine(waffle);
+                Console.WriteLine(objects);
             }
         }
     }
