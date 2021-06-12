@@ -1,0 +1,16 @@
+﻿
+
+
+<button disabled="@(TotalItemAmount == 0)" class="dot">
+    <MatIcon Style="transform: scale(0.9)" Icon="shopping_cart"></MatIcon>
+
+    @if (TotalItemAmount != 0)
+    {
+        <b class="offsetSpan">@TotalItemAmount</b>
+    }
+</button>
+
+@code {
+    [Parameter]
+    public int TotalItemAmount { get; set; }
+}

@@ -1,5 +1,24 @@
-﻿<h3>OrderSelectAddition</h3>
+﻿@using WaffleDB.Component
+
+
+<MatH5 Style="margin-left: 35px;">Getränke:</MatH5>
+<MatDivider Padded="true"></MatDivider>
+
+<div style="padding: 20px;">
+    @foreach (var item in Products)
+    {
+        <ProductView Product="item"></ProductView>
+    }
+</div>
 
 @code {
-
+    protected List<Product> Products = new List<Product>()
+    {
+        new Product() { idProduct = 1,name = "Waffel Ohne AllesT", price = 4.59f },
+        new Product() { idProduct = 2, name = "Waffel mit ZuckerT", price = 12.4f },
+        new Product() { idProduct = 2, name = "Waffel mit ZuckersadfasT", price = 12.4f },
+        new Product() { idProduct = 2, name = "Waffel mit ZuckersdhgsT", price = 132.4f },
+        new Product() { idProduct = 2, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { name = "BananenWaffelT", price = 4.54f }
+    };
 }

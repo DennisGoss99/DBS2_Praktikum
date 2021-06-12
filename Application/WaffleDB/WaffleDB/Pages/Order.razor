@@ -1,11 +1,11 @@
 ﻿@page "/order"
 @using WaffleDB.Pages.OrderPages
-
+@using WaffleDB.Component
 
 
 <table>
     <tr>
-        <td>
+        <td style="vertical-align: top;">
             <div class="sidebar">
                 <OrderNavMenu @bind-OrderTypeValue="@OrderType"></OrderNavMenu>
             </div>
@@ -30,18 +30,17 @@
 
 </table>
 
-
-<button class="offsetButton dot">
-    <MatIcon Style="transform: scale(0.9)" Icon="shopping_cart"></MatIcon>
-</button>
+<div class="offsetButton" @onclick="()=> itemAmount++">
+    <ShoppingcartButton TotalItemAmount="@itemAmount" />
+</div>
 
 
 
 @code {
 
+    int itemAmount = 0;
 
-
-    public OrderTypes OrderType = OrderTypes.OrderPreMadeWaffles;
+    public OrderTypes OrderType=OrderTypes.OrderPreMadeWaffles;
 
 
 }
