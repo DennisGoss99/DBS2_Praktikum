@@ -1,49 +1,29 @@
-﻿@page "/"
+﻿@inject NavigationManager _navigationManager
+@page "/"
 
-<style>
-    .buttonDiv {
-        border-style: solid;
-        border-width: 2px;
-        border-color: #606060;
-        border-radius: 5px;
-        padding: 20px;
-        width: auto;
-        display: inline-block;
-        position: relative;
-        height: auto;
-        text-align: center;
-        box-shadow: 6px 6px 10px silver;
-        background: #FAFAFA;
-    }
-</style>
-
-
-
-<div style="text-align: center">
-
+<div style="text-align: center;padding-top: 1.1rem;">
+    
     <MatH2>Willkommen zu WaffleDB!</MatH2>
     <p>
         <img style="margin-top: 10px;" src="Images/waffelDB.png" asp-append-version="true" width="250" />
     </p>
-    
-    
 
-
-    <div style="margin-top: 10px;" class="buttonDiv">
+    <button style="margin-top: 10px;" class="buttonS1" @onclick="OnClickOrder">
         <b>Waffel bestellen</b>
         <MatIcon Style="position: relative; top:5px;" Icon="local_dining"></MatIcon>
-    </div>
+    </button>
 
 </div>
 @code
 {
-    private string _test = "test";
 
     protected override Task OnInitializedAsync()
     {
         return base.OnInitializedAsync();
     }
 
+    protected void OnClickOrder(MouseEventArgs m) => _navigationManager.NavigateTo("/order");
+    
 
 
 }

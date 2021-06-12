@@ -1,0 +1,47 @@
+﻿@page "/order"
+@using WaffleDB.Pages.OrderPages
+
+
+
+<table>
+    <tr>
+        <td>
+            <div class="sidebar">
+                <OrderNavMenu @bind-OrderTypeValue="@OrderType"></OrderNavMenu>
+            </div>
+        </td>
+        <td style="vertical-align: top;">
+            <div class="content px-4">
+                @switch (OrderType)
+                {
+                    case OrderTypes.OrderAdditions:
+                        <OrderSelectAddition />
+                        break;
+                    case OrderTypes.OrderPreMadeWaffles:
+                        <OrderSelectPreMadeWaffle />
+                        break;
+                    case OrderTypes.OrderSelfMadeWaffles:
+                        <OrderSelectSelfMadeWaffle />
+                        break;
+                }
+            </div>
+        </td>
+    </tr>
+
+</table>
+
+
+<button class="offsetButton dot">
+    <MatIcon Style="transform: scale(0.9)" Icon="shopping_cart"></MatIcon>
+</button>
+
+
+
+@code {
+
+
+
+    public OrderTypes OrderType = OrderTypes.OrderPreMadeWaffles;
+
+
+}
