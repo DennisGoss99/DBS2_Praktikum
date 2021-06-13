@@ -1,16 +1,13 @@
 ﻿@using WaffleDB.Component
 
+<img id="banner" asp-append-version="true" src="Images/getranke_banner.png" />
 
-<MatH5 Style="margin-left: 35px;">Getränke:</MatH5>
-<MatDivider Padded="true"></MatDivider>
-
-<div style="padding: 20px;">
+<div style="padding-top: 24px;">
     @foreach (var item in Products)
     {
-        <di @onclick="@OpenDialog">
+        <di @onclick="() => OpenDialog(item)">
             <ProductView Product="item"></ProductView>
         </di>
-        
     }
 </div>
 
@@ -18,17 +15,17 @@
     <MatDialogContent>
         <p>Anzahl:</p>
         <div style="text-align: center">
-            <button disabled="@(WaffleAmount == 1)" style="margin-right: 15px;" class="dot" @onclick="()=> WaffleAmount--">
+            <button disabled="@(Amount == 1)" style="margin-right: 15px;" class="dot" @onclick="()=> Amount--">
                 <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
             </button>
-            <span>@WaffleAmount</span>
-            <button style="margin-left: 15px;" class="dot" @onclick="()=> WaffleAmount++">
+            <span>@Amount</span>
+            <button style="margin-left: 15px;" class="dot" @onclick="()=> Amount++">
                 <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
             </button>
         </div>
     </MatDialogContent>
     <MatDialogActions>
-        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Abbrechen</MatButton>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; LastClickedOnProduct = null; })">Abbrechen</MatButton>
         <MatButton OnClick="@OkClick">OK</MatButton>
     </MatDialogActions>
 </MatDialog>
@@ -36,18 +33,27 @@
 
 @code {
 
-    bool dialogIsOpen = false;
-    int WaffleAmount = -1;
+    [Parameter]
+    public EventCallback<Tuple<Product,int>> OrderedSomething { get; set; }
 
-    void OpenDialog()
+    protected Product LastClickedOnProduct = null;
+
+    bool dialogIsOpen = false;
+    int Amount = -1;
+
+    void OpenDialog(Product product)
     {
-        WaffleAmount = 1;
+        LastClickedOnProduct = product;
+        Amount = 1;
         dialogIsOpen = true;
     }
 
-    void OkClick()
+    private async Task OkClick()
     {
-        //shoppingCart
+
+       if(LastClickedOnProduct != null)
+           await OrderedSomething.InvokeAsync( new Tuple<Product, int>( LastClickedOnProduct, Amount));
+
         dialogIsOpen = false;
     }
 
@@ -55,9 +61,16 @@
     {
         new Product() { idProduct = 1,name = "Waffel Ohne AllesT", price = 4.59f },
         new Product() { idProduct = 2, name = "Waffel mit ZuckerT", price = 12.4f },
-        new Product() { idProduct = 2, name = "Waffel mit ZuckersadfasT", price = 12.4f },
-        new Product() { idProduct = 2, name = "Waffel mit ZuckersdhgsT", price = 132.4f },
-        new Product() { idProduct = 2, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 3, name = "Waffel mit ZuckersadfasT", price = 12.4f },
+        new Product() { idProduct = 4, name = "Waffel mit ZuckersdhgsT", price = 132.4f },
+        new Product() { idProduct = 5, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 5, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 6, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 7, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 8, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 9, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 10, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
+        new Product() { idProduct = 11, name = "Waffel mit ZuckerhdfhT", price = 14.4f },
         new Product() { name = "BananenWaffelT", price = 4.54f }
     };
 }

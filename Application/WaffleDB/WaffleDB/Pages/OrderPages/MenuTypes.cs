@@ -9,6 +9,7 @@ namespace WaffleDB.Pages.OrderPages
     {
         OrderAdditions,
         OrderPreMadeWaffles,
-        OrderSelfMadeWaffles
+        OrderSelfMadeWaffles,
+        ShoppingCart
     }
 }

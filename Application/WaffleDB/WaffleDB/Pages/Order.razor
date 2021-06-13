@@ -1,46 +1,65 @@
 ﻿@page "/order"
+@inject NavigationManager _navigationManager
 @using WaffleDB.Pages.OrderPages
 @using WaffleDB.Component
 
 
 <table>
     <tr>
-        <td style="vertical-align: top;">
-            <div class="sidebar">
-                <OrderNavMenu @bind-OrderTypeValue="@OrderType"></OrderNavMenu>
-            </div>
-        </td>
+        @if (OrderType != OrderTypes.ShoppingCart)
+        {
+            <td style="vertical-align: top;">
+                <div class="sidebar">
+                    <OrderNavMenu @bind-OrderTypeValue="@OrderType"></OrderNavMenu>
+                </div>
+            </td>
+        }
         <td style="vertical-align: top;">
             <div class="content px-4">
                 @switch (OrderType)
                 {
                     case OrderTypes.OrderAdditions:
-                        <OrderSelectAddition />
+                        <OrderSelectAddition OrderedSomething=@HandelReceivedAddToShoppingCart/>
                         break;
                     case OrderTypes.OrderPreMadeWaffles:
-                        <OrderSelectPreMadeWaffle />
+                        <OrderSelectPreMadeWaffle/>
                         break;
                     case OrderTypes.OrderSelfMadeWaffles:
-                        <OrderSelectSelfMadeWaffle />
+                        <OrderSelectSelfMadeWaffle/>
                         break;
+                    case OrderTypes.ShoppingCart:
+                        <ShoppingCart/>
+                        break;
+
                 }
             </div>
         </td>
     </tr>
 
 </table>
-
-<div class="offsetButton" @onclick="()=> itemAmount++">
-    <ShoppingcartButton TotalItemAmount="@itemAmount" />
-</div>
-
+@if (OrderType != OrderTypes.ShoppingCart)
+{
+    <div disabled="@(ItemAmount == 0)" class="offsetButton" @onclick="@(() => OrderType = OrderTypes.ShoppingCart)">
+        <ShoppingcartButton TotalItemAmount="@ItemAmount"/>
+    </div>
+}
 
 
 @code {
 
-    int itemAmount = 0;
+    protected int ItemAmount = 0;
 
     public OrderTypes OrderType=OrderTypes.OrderPreMadeWaffles;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+
+    private void HandelReceivedAddToShoppingCart(Tuple<Product,int> value)
+    {
+        ItemAmount += value.Item2;
+    }
 
 }

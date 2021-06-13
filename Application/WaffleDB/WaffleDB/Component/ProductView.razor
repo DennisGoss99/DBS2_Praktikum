@@ -1,5 +1,5 @@
 ﻿
-<div Class="box" Elevation="3" Rounded="true">
+<div Class="box">
     @if (Product != null)
     {
     <div style="text-align: center">
@@ -7,37 +7,37 @@
         @switch (Product.idProduct)
         {
             case 1: //"BananenWaffel"
-                <img class="image" width="110" src="Images/Products/bananaProductImage.png" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/bananaProductImage.png" />
                 break;
             case 2: //"SchokoWaffel"
-                <img class="image" width="110" src="Images/Products/chocProductImage.png" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/chocProductImage.png" />
                 break;
             case 3: //"MegaSchokoWaffel"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/magachocProductImage.png" />
                 break;
             case 4: //"ApfelWaffel"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/appleProductImage.png" />
                 break;
             case 5: //"Waffel Ohne Alles"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/waffelProductImage.png" />
                 break;
             case 6: //"Blaubeer Waffel"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/blueberryProductImage.png" />
                 break;
             case 7: //"Waffel mit Zucker"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/sugarProductImage.png" />
                 break;
             case 8: //"Coloa"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/cola.png" />
                 break;
             case 9: //"Kakao"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/cocoa.png" />
                 break;
             case 10:    //"Kaffe"
-                <img class="image" width="110" src="" />
+                <img class="image" width="110" asp-append-version="true" src="Images/Products/coffee.png" />
                 break;
             default:
-                <img class="image" width="110" src="/Images/Products/defaultProductImage.png" />
+                <img class="image" width="110" asp-append-version="true" src="/Images/Products/defaultProductImage.png" />
                 break;
         }
         <h6 class="name"><b>@Product.name</b></h6>
@@ -51,4 +51,10 @@
     public Product Product{get; set; }
     
 
+
+
+
+
+
 }
+
