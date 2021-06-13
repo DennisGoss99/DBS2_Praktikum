@@ -51,7 +51,7 @@ namespace WaffleDB
         public override string ToString()
         {
             return
-            "idWaffle:" + idWaffle +
+            "<Waffle> idWaffle:" + idWaffle +
             " creatorName:" + creatorName +
             " creationDate:" + creationDate +
             " processingTimeSec:" + processingTimeSec +

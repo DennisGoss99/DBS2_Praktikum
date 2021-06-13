@@ -1,6 +1,6 @@
 ﻿namespace WaffleDB
 {
-    public class NutritionalInformation
+    public class NutritionalInformation : IDataBaseTable
     {
         public int idNuIn { get; set; }
         public float calories { get; set; }
@@ -51,5 +51,17 @@
             protein + "," +
             salt +
             ")";
+        public override string ToString()
+        {
+            return
+                "<NutritionalInformation> idNuIn:" + idNuIn +
+                " calories:" + calories +
+                " saturatedFat:" + saturatedFat +
+                " transFat:" + transFat +
+                " carbohydrates:" + carbohydrates +
+                " sugar:" + sugar +
+                " protein:" + protein +
+                " salt:" + salt;
+        }
     }
 }

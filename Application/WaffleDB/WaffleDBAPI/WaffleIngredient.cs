@@ -32,5 +32,13 @@
             idWaffle + "," +
             amount + 
             ")";
+
+        public override string ToString()
+        {
+            return
+                "<WaffleIngredient> idIngredient:" + idIngredient +
+                " idWaffle:" + idWaffle +
+                " amount:" + amount;
+        }
     }
 }

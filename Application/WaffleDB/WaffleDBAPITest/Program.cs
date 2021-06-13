@@ -8,7 +8,7 @@ namespace WaffleDBAPITest
     {
         static int Main()
         {
-            PrintfAll(WaffleDBAPI.GetAllWaffles());
+            PrintAllTables();
 
             //AddWaffle(); // <--- fails cuz there is no product with that ID
             Console.ReadKey();
@@ -22,14 +22,47 @@ namespace WaffleDBAPITest
             WaffleDBAPI.SQLExecuteInsertEntry(newWaffle);
         }
 
-        private static void PrintfAll<T>(List<T> list)
+        private static void PrintAllTables()
         {
-            Console.WriteLine(typeof(T).ToString());
+            PrintfCompleteList(WaffleDBAPI.GetAllAdditions());
+            PrintfCompleteList(WaffleDBAPI.GetAllIngredients());
+            PrintfCompleteList(WaffleDBAPI.GetAllInventorys());
+            PrintfCompleteList(WaffleDBAPI.GetAllNutritionInformations());
+            PrintfCompleteList(WaffleDBAPI.GetAllPersonalNotifications());
+            PrintfCompleteList(WaffleDBAPI.GetAllProducts());
+            PrintfCompleteList(WaffleDBAPI.GetAllProductOrders());
+            PrintfCompleteList(WaffleDBAPI.GetAllWaffles());
+            PrintfCompleteList(WaffleDBAPI.GetAllWaffleIngredients());
+            PrintfCompleteList(WaffleDBAPI.GetAllWaffleOrders());
+            PrintfCompleteList(WaffleDBAPI.GetAllWaffleStores());
+        }
 
-            foreach (T objects in list)
+        private static void PrintfCompleteList<T>(List<T> list)
+        {
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine("Parsing <" + typeof(T).ToString() + ">");
+            Console.WriteLine("---------------------------------------------------------");
+
+            if(list == null)
             {
-                Console.WriteLine(objects);
+                Console.WriteLine("List is NULL! Maybe there was something wrong while fetching the data.");
             }
+            else
+            {
+                if(list.Count == 0)
+                {
+                    Console.WriteLine("<No Data>");
+                }
+                else
+                {
+                    foreach (T objects in list)
+                    {
+                        Console.WriteLine(objects);
+                    }
+                }
+            }     
+
+            Console.WriteLine("---------------------------------------------------------\n\n");
         }
     }
 }

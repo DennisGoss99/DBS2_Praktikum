@@ -2,7 +2,7 @@
 
 namespace WaffleDB
 {
-    public class Inventory
+    public class Inventory : IDataBaseTable
     {
         public int idInventory { get; set; }
         public int idIngredient { get; set; }
@@ -32,8 +32,8 @@ namespace WaffleDB
         public string UpdateCommand =>
              "UPDATE " + TableName + " SET " +
              "idStore = " + idStore + ", " +
-             "expiryDate = " + expiryDate + ", " +
-             "deliveryDate = " + deliveryDate + ", " +
+             "expiryDate = \"" + expiryDate + "\", " +
+             "deliveryDate = \"" + deliveryDate + "\", " +
              "amount = " + amount + ", " +
              "isAccessible = " + isAccessible +
              " WHERE idInventory = " + idInventory;
@@ -43,10 +43,23 @@ namespace WaffleDB
             idInventory + "," +
             idIngredient + "," +
             idStore + "," +
-            expiryDate + "," +
-            deliveryDate + "," +
+            "\"" + expiryDate + "\"," +
+            "\"" + deliveryDate + "\"," +
             amount + "," +
             isAccessible +
             ")";
+
+        public override string ToString()
+        {
+            return
+                "<Inventory> idInventory:" + idInventory +
+                " idIngredient:" + idIngredient +
+                " idStore:" + idStore +
+                " idStore:" + idStore +
+                " expiryDate:" + expiryDate +
+                " deliveryDate:" + deliveryDate +
+                " amount:" + amount +
+                " isAccessible:" + isAccessible;
+        }
     }
 }

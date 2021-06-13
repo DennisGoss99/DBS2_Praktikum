@@ -1,6 +1,6 @@
 ﻿namespace WaffleDB
 {
-    public class Addition
+    public class Addition : IDataBaseTable
     {
         public int idAddition { get; set; }
         public string optComment { get; set; }
@@ -28,5 +28,10 @@
             idAddition + "," +
              "\"" + optComment + "\"" +
             ")";
+
+        public override string ToString()
+        {
+            return "<Product> idAddition:" + idAddition + " optComment:" + optComment;
+        }
     }
 }

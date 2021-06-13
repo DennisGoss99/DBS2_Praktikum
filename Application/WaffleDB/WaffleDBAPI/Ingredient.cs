@@ -1,6 +1,6 @@
 ﻿namespace WaffleDB
 {
-    public class Ingredient
+    public class Ingredient : IDataBaseTable
     {
         public int idIngredient { get; set; }
         public int idNuIn { get; set; }
@@ -13,8 +13,8 @@
         public string UpdateCommand =>
              "UPDATE " + TableName + " SET " +
              "idNuIn = " + idNuIn + ", " +
-             "name = " + name + ", " +
-             "unit = " + unit + ", " +
+             "name = \"" + name + "\", " +
+             "unit = \"" + unit + "\", " +
              "price = " + price + ", " +
              "processingTimeSec = " + processingTimeSec +
              " WHERE idIngredient = " + idIngredient;
@@ -23,10 +23,21 @@
             " VALUES(" +
             idIngredient + "," +
             idNuIn + "," +
-            name + "," +
-            unit + "," +
+            "\"" + name + "\"," +
+            "\"" + unit + "\"," +
             price + "," +
             processingTimeSec +
             ")";
+
+        public override string ToString()
+        {
+            return
+                "<Ingredient> idIngredient:" + idIngredient +
+                " idNuIn:" + idNuIn +
+                     " name:" + name +
+                          " unit:" + unit +
+                               " price:" + price +
+                               " processingTimeSec:" + processingTimeSec;
+        }
     }
 }

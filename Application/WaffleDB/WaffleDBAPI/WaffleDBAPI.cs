@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace WaffleDB
 {
-    public class WaffleDBAPI
+    public class WaffleDBAPI 
     {
         private static string _ip { get => "127.0.0.1"; }
         private static string _dataBaseName { get => "waffleDB"; }
@@ -18,10 +18,17 @@ namespace WaffleDB
             string sqlCommand = "SELECT * FROM " + tableName;
             List<T> objectList = null;
 
-            using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
+            try
             {
-                objectList = mysqlConnection.Query<T>(sqlCommand).ToList();                
+                using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
+                {
+                    objectList = mysqlConnection.Query<T>(sqlCommand).ToList();
+                }
             }
+            catch (System.Exception)
+            {
+                // Do nothing
+            }       
 
             return objectList;
         }
