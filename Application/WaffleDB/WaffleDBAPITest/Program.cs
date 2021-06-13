@@ -8,7 +8,7 @@ namespace WaffleDBAPITest
     {
         static int Main()
         {
-            PrintfAll(WaffleDBAPI.Waffles);
+            PrintfAll(WaffleDBAPI.GetAllWaffles());
 
             //AddWaffle(); // <--- fails cuz there is no product with that ID
             Console.ReadKey();
@@ -19,7 +19,7 @@ namespace WaffleDBAPITest
         {
             Waffle newWaffle = new Waffle(7,"BitPaw"); 
 
-            WaffleDBAPI.InsertEntry(newWaffle);
+            WaffleDBAPI.SQLExecuteInsertEntry(newWaffle);
         }
 
         private static void PrintfAll<T>(List<T> list)

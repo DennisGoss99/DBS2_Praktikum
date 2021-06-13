@@ -10,20 +10,7 @@ namespace WaffleDB
         private static string _ip { get => "127.0.0.1"; }
         private static string _dataBaseName { get => "waffleDB"; }
         private static string _connectionString { get => "Server=" + _ip + ";Database=" + _dataBaseName + ";Uid=root;Pwd=;"; }
-
-
-        public static List<Product> Products { get => TableFetchAll<Product>(); }
-        public static List<Addition> Additions { get => TableFetchAll<Addition>(); }
-        public static List<Waffle> Waffles { get => TableFetchAll<Waffle>(); }
-        public static List<WaffleIngredient> WaffleIngredients { get => TableFetchAll<WaffleIngredient>(); }
-        public static List<Ingredient> Ingredients { get => TableFetchAll<Ingredient>(); }
-        public static List<NutritionalInformation> NutritionInformations { get => TableFetchAll<NutritionalInformation>(); }
-        public static List<Inventory> Inventorys { get => TableFetchAll<Inventory>(); }
-        public static List<WaffleStore> WaffleStores { get => TableFetchAll<WaffleStore>(); }
-        public static List<PersonalNotification> PersonalNotifications { get => TableFetchAll<PersonalNotification>(); }
-        public static List<WaffleOrder> WaffleOrders { get => TableFetchAll<WaffleOrder>(); }
-        public static List<ProductOrder> ProductOrders { get => TableFetchAll<ProductOrder>(); }
-
+               
 
         private static List<T> TableFetchAll<T>()
         {
@@ -39,7 +26,7 @@ namespace WaffleDB
             return objectList;
         }
 
-        public static void InsertEntry(IDataBaseTable dataBaseTable)
+        public static void SQLExecuteInsertEntry(IDataBaseTable dataBaseTable)
         {
             string sqlCommand = dataBaseTable.InsertCommand;
 
@@ -49,7 +36,15 @@ namespace WaffleDB
             }
         }
 
-        public static void UpdateEntry(IDataBaseTable dataBaseTable)
+        public static void SQLExecuteCommand(string sqlCommand)
+        {
+            using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
+            {
+                mysqlConnection.Execute(sqlCommand);
+            }
+        }
+
+        public static void SQLExecuteUpdateEntry(IDataBaseTable dataBaseTable)
         {
             string sqlCommand = dataBaseTable.UpdateCommand;
 
@@ -57,6 +52,51 @@ namespace WaffleDB
             {
                 mysqlConnection.Execute(sqlCommand);
             }
+        }
+
+        public static List<Product> GetAllProducts()
+        {
+            return TableFetchAll<Product>();
+        }
+        public static List<Addition> GetAllAdditions()
+        {
+            return TableFetchAll<Addition>();
+        }
+        public static List<Waffle> GetAllWaffles()
+        {
+            return TableFetchAll<Waffle>();
+        }
+        public static List<WaffleIngredient> GetAllWaffleIngredients()
+        {
+            return TableFetchAll<WaffleIngredient>();
+        }
+        public static List<Ingredient> GetAllIngredients()
+        {
+            return TableFetchAll<Ingredient>();
+        }
+        public static List<NutritionalInformation> GetAllNutritionInformations()
+        {
+            return TableFetchAll<NutritionalInformation>();
+        }
+        public static List<Inventory> GetAllInventorys()
+        {
+            return TableFetchAll<Inventory>();
+        }
+        public static List<WaffleStore> GetAllWaffleStores()
+        {
+            return TableFetchAll<WaffleStore>();
+        }
+        public static List<PersonalNotification> GetAllPersonalNotifications()
+        {
+            return TableFetchAll<PersonalNotification>();
+        }
+        public static List<WaffleOrder> GetAllWaffleOrders()
+        {
+            return TableFetchAll<WaffleOrder>();
+        }
+        public static List<ProductOrder> GetAllProductOrders()
+        {
+            return TableFetchAll<ProductOrder>();
         }
     }
 }
