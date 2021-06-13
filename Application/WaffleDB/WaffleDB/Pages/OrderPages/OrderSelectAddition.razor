@@ -7,11 +7,50 @@
 <div style="padding: 20px;">
     @foreach (var item in Products)
     {
-        <ProductView Product="item"></ProductView>
+        <di @onclick="@OpenDialog">
+            <ProductView Product="item"></ProductView>
+        </di>
+        
     }
 </div>
 
+<MatDialog @bind-IsOpen="@dialogIsOpen">
+    <MatDialogContent>
+        <p>Anzahl:</p>
+        <div style="text-align: center">
+            <button disabled="@(WaffleAmount == 1)" style="margin-right: 15px;" class="dot" @onclick="()=> WaffleAmount--">
+                <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
+            </button>
+            <span>@WaffleAmount</span>
+            <button style="margin-left: 15px;" class="dot" @onclick="()=> WaffleAmount++">
+                <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
+            </button>
+        </div>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Abbrechen</MatButton>
+        <MatButton OnClick="@OkClick">OK</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+
 @code {
+
+    bool dialogIsOpen = false;
+    int WaffleAmount = -1;
+
+    void OpenDialog()
+    {
+        WaffleAmount = 1;
+        dialogIsOpen = true;
+    }
+
+    void OkClick()
+    {
+        //shoppingCart
+        dialogIsOpen = false;
+    }
+
     protected List<Product> Products = new List<Product>()
     {
         new Product() { idProduct = 1,name = "Waffel Ohne AllesT", price = 4.59f },
