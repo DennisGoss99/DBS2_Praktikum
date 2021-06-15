@@ -32,6 +32,19 @@ namespace WaffleDB
 
             return objectList;
         }
+        
+        public static ProductWaffle GetProductWaffle(int waffleID)
+        {
+            ProductWaffle productWaffle = new ProductWaffle();
+
+            using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
+            {
+                productWaffle.WaffleElement = mysqlConnection.Query<Waffle>("select * from waffle where idWaffle = " + waffleID).First();
+                productWaffle.ProductElement = mysqlConnection.Query<Product>("select * from product where idProduct = " + waffleID).First();
+            }
+
+            return productWaffle;
+        }
 
         public static void SQLExecuteInsertEntry(IDataBaseTable dataBaseTable)
         {

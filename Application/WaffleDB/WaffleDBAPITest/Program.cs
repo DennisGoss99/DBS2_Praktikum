@@ -10,7 +10,10 @@ namespace WaffleDBAPITest
         {
             PrintAllTables();
 
-            //AddWaffle(); // <--- fails cuz there is no product with that ID
+            ProductWaffle waffle =  WaffleDBAPI.GetProductWaffle(2);
+
+
+           // AddWaffle(); // <--- fails cuz there is no product with that ID
             Console.ReadKey();
             return 0;
         }
@@ -19,7 +22,7 @@ namespace WaffleDBAPITest
         {
             Waffle newWaffle = new Waffle(7,"BitPaw"); 
 
-            WaffleDBAPI.SQLExecuteInsertEntry(newWaffle);
+            WaffleDBAPI.SQLExecuteInsertEntry(newWaffle);            
         }
 
         private static void PrintAllTables()

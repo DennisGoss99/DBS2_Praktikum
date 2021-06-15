@@ -7,6 +7,19 @@
         public int amount { get; set; }
         public int calculatedTime { get; set; }
 
+        public ProductOrder()
+        {
+
+        }
+
+        public ProductOrder(int idOrder, int idProduct, int amount)
+        {
+            this.idOrder = idOrder;
+            this.idProduct = idProduct;
+            this.amount = amount;
+            this.calculatedTime = 0;
+        }
+
         public string TableName => "ProductOrder";
         public string UpdateCommand =>
              "UPDATE " + amount + " SET " +
