@@ -9,7 +9,7 @@
         {
             get =>
                 "select * from Waffle " +
-                "left join Product on  Waffle.idWaffle = Product.idProduct";
+                "inner join Product on  Waffle.idWaffle = Product.idProduct";
         }        
     }
 }

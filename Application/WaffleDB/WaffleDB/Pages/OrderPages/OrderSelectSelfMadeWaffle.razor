@@ -1,5 +1,65 @@
-﻿<h3>OrderSelectSelfMadeWaffle</h3>
+﻿<img id="banner" asp-append-version="true" src="Images/waffel_banner.png" />
+<br/>
+
+@if (ingredients == null)
+{
+    <span style="font-size: large"><b>Loading...</b></span>
+    <MatProgressCircle Indeterminate="true" Size="MatProgressCircleSize.Small" />
+}
+else
+{
+    <table >
+        @foreach (var ingredient in ingredients)
+        {
+        <tr style="background: #F9F6F6">
+            <td class="tableColumn">
+                <p>@ingredient.name <b style="font-size: 9px;"> @ingredient.unit</b></p>
+            </td>
+            <td class="tableColumn">
+                <div style="text-align: center;">
+                    <button disabled="@(Amount == 0)" style="margin-right: 15px;" class="dot" @onclick="()=> Amount--">
+                        <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
+                    </button>
+                    <span>@Amount</span>
+                    <button style="margin-left: 15px;" class="dot" @onclick="()=> Amount++">
+                        <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
+                    </button>
+                </div>
+            </td>
+
+            <td style="padding-left: 20px;" class="tableColumn">
+                <p>@((ingredient.price * Amount).ToString("F2"))  €</p>
+            </td>
+        </tr>
+        }
+    </table>
+
+}
 
 @code {
+
+    [Parameter]
+    public EventCallback<Tuple<Product, int>> OrderedSomething { get; set; }
+
+    protected List<Ingredient> ingredients;
+
+    protected int Amount = 0;
+    
+    protected override async Task OnInitializedAsync()
+    {
+
+        ingredients = new List<Ingredient>()
+        {
+            new Ingredient() {name = "Waffle", price = 1.49f, processingTimeSec = 5, unit = "Stück"},
+            new Ingredient() {name = "Himbeeren", price = 1.49f, processingTimeSec = 5, unit = "50g"},
+            new Ingredient() {name = "Blaubeeren", price = 1.99f, processingTimeSec = 5, unit = "50g"},
+            new Ingredient() {name = "Puderzucker", price = 0.09f, processingTimeSec = 5, unit = "Portion"},
+            new Ingredient() {name = "Schokolade", price = 0.99f, processingTimeSec = 5, unit = "50g"}
+        };
+
+        await base.OnInitializedAsync();
+    }
+
+
 
 }

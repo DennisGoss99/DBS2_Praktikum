@@ -16,3 +16,13 @@
     right: 40px;
 }
 
+.dot {
+    height: 30px;
+    width: 30px;
+    background-color: rgba(200,200,200,0.2);
+    border-radius: 50%;
+    display: inline-block;
+    border: none;
+    align-items: center;
+    text-align: center;
+}

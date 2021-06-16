@@ -1,5 +1,8 @@
-﻿<h3>OrderSelectPreMadeWaffle</h3>
+﻿
+
+<img id="banner" asp-append-version="true" src="Images/waffel_banner.png" />
 
 @code {
-
+    [Parameter]
+    public EventCallback<Tuple<Product, int>> OrderedSomething { get; set; }
 }

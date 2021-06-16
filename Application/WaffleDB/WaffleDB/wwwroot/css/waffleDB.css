@@ -13,3 +13,8 @@
     box-shadow: 6px 6px 10px silver;
     background: #FAFAFA;
 }
+
+#banner {
+    width: 100%;
+    height: auto;
+}
