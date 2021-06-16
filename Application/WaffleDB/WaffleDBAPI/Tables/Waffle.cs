@@ -2,7 +2,7 @@
 
 namespace WaffleDB
 {
-    public class Waffle : IDataBaseTable
+    public class Waffle : IDataBaseTable, IWaffle
     {
         public int idWaffle { get; set; }
         public string creatorName { get; set; }

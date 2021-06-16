@@ -16,6 +16,11 @@
 
         }
 
+        public NutritionalInformation(int idNuIn) : this(idNuIn, -1, -1, -1, -1, -1, -1, -1)
+        {
+
+        }
+
         public NutritionalInformation(int idNuIn, float calories, float saturatedFat, float transFat, float carbohydrates, float sugar, float protein, float salt)
         {
             this.idNuIn = idNuIn;

@@ -10,23 +10,45 @@ namespace WaffleDBAPITest
         {
             PrintAllTables();
 
-            ProductWaffle waffle =  WaffleDBAPI.GetProductWaffle(2);
+            //BuildCustomWaffle(); // OK
+            //BuyStuff(); // OK
 
-
-           // AddWaffle(); // <--- fails cuz there is no product with that ID
             Console.ReadKey();
             return 0;
         }
 
-        private static void AddWaffle()
+        private static void BuyStuff()
         {
-            Waffle newWaffle = new Waffle(7,"BitPaw"); 
+            ShoppingCart shoppingCart = new ShoppingCart();
 
-            WaffleDBAPI.SQLExecuteInsertEntry(newWaffle);            
+            shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(1, 1));
+            shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(2, 2));
+            shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(3, 5));
+
+            shoppingCart.FinishOrder(1);
+        }
+
+        private static void BuildCustomWaffle()
+        {
+            string waffleName = "BitPaws_Waffel";
+            List<KeyValuePair<int, int>> ingredientList = new List<KeyValuePair<int, int>>();
+
+
+            ingredientList.Add(new KeyValuePair<int, int>(1, 5));
+            ingredientList.Add(new KeyValuePair<int, int>(2, 3));
+            ingredientList.Add(new KeyValuePair<int, int>(3, 10));
+            ingredientList.Add(new KeyValuePair<int, int>(4, 50));
+
+            Waffle waffle = WaffleDBAPI.CreateCustomWaffle(waffleName, ingredientList);
+
+            Console.WriteLine("Waffle created <" + waffle.ToString() + ">");
         }
 
         private static void PrintAllTables()
         {
+            PrintfCompleteList(WaffleDBAPI.GetAllProductAdditions());
+            PrintfCompleteList(WaffleDBAPI.GetAllProductWaffles());
+
             PrintfCompleteList(WaffleDBAPI.GetAllAdditions());
             PrintfCompleteList(WaffleDBAPI.GetAllIngredients());
             PrintfCompleteList(WaffleDBAPI.GetAllInventorys());

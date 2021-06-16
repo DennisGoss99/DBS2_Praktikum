@@ -1,6 +1,6 @@
 ﻿namespace WaffleDB
 {
-    public class Addition : IDataBaseTable
+    public class Addition : IDataBaseTable, IAddition
     {
         public int idAddition { get; set; }
         public string optComment { get; set; }
