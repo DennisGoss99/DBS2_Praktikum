@@ -7,7 +7,7 @@ namespace WaffleDB
         /// <summary>
         /// ProductID, Amount 
         /// </summary>
-        public List<KeyValuePair<Product, int>> ProductOrderList = new List<KeyValuePair<Product, int>>();
+        public List<KeyValuePair<IProduct, int>> ProductOrderList = new List<KeyValuePair<IProduct, int>>();
 
         public int SumOfCurrentProductsElemets 
         {
@@ -39,7 +39,7 @@ namespace WaffleDB
             foreach (var item in ProductOrderList)
             {
                 int amount = item.Value;
-                Product product = item.Key;
+                IProduct product = item.Key;
                 int productID = product.idProduct;            
 
                 ProductOrder productOrder = new ProductOrder(waffleOrder.idOrder, productID, amount);
