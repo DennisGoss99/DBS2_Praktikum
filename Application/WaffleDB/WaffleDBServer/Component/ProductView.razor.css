@@ -1,0 +1,36 @@
+﻿
+
+.price {
+    color: #5d391e;
+    margin-right: 10px;
+    float: right;
+    font-size: medium;
+}
+
+.name {
+    color: #5d391e;
+    margin-top: 5px;
+    font-size: medium;
+}
+
+.box {
+    background: #FAF7F7;
+    border: #FFFFFF;
+    border-width: 2px;
+    border-radius: 6px;
+    border-style: solid;
+    float: left;
+    /*padding: 10px;*/
+    padding-bottom: 0;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    min-width: 210px;
+    min-height: 200px;
+    max-width: 210px;
+    max-height: 200px;
+}
+
+#responsive-image {
+    width: 90%;
+    height: auto;
+} 

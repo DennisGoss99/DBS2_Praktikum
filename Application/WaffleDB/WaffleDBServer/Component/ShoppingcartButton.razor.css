@@ -1,0 +1,19 @@
+﻿
+.dot {
+    height: 55px;
+    width: 55px;
+    background-color: rgba(200,200,200,0.2);
+    border-radius: 50%;
+    display: inline-block;
+    border: none;
+    align-items: center;
+}
+
+.offsetSpan {
+    position: absolute;
+    right: 9px;
+    top: 2px;
+    z-index: 9;
+    color: red;
+
+}

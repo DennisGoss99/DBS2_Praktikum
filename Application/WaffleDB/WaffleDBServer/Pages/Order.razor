@@ -1,0 +1,65 @@
+﻿@page "/order"
+@inject NavigationManager _navigationManager
+@using WaffleDBServer.Pages.OrderPages
+@using WaffleDBServer.Pages
+@using WaffleDBServer.Component
+
+<table>
+    <tr>
+        @if (OrderType != OrderTypes.ShoppingCart)
+        {
+            <td style="vertical-align: top;">
+                <div class="sidebar">
+                    <OrderNavMenu @bind-OrderTypeValue="@OrderType"></OrderNavMenu>
+                </div>
+            </td>
+        }
+        <td style="width: 100%; vertical-align: top;">
+            <div class="content px-4">
+                @switch (OrderType)
+                {
+                    case OrderTypes.OrderAdditions:
+                        <OrderSelectAddition OrderedSomething=@HandelReceivedAddToShoppingCart />
+                        break;
+                    case OrderTypes.OrderPreMadeWaffles:
+                        <OrderSelectPreMadeWaffle />
+                        break;
+                    case OrderTypes.OrderSelfMadeWaffles:
+                        <OrderSelectSelfMadeWaffle />
+                        break;
+                    case OrderTypes.ShoppingCart:
+                        <ShoppingCart />
+                        break;
+
+                }
+            </div>
+        </td>
+    </tr>
+
+</table>
+@if (OrderType != OrderTypes.ShoppingCart)
+{
+    <div disabled="@(ItemAmount == 0)" class="offsetButton" @onclick="@(() => OrderType = OrderTypes.ShoppingCart)">
+        <ShoppingcartButton TotalItemAmount="@ItemAmount" />
+    </div>
+}
+
+
+@code {
+
+    protected int ItemAmount = 0;
+
+    public OrderTypes OrderType = OrderTypes.OrderPreMadeWaffles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+
+    private void HandelReceivedAddToShoppingCart(Tuple<int, int> value)
+    {
+        ItemAmount += value.Item2;
+    }
+
+}

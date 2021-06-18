@@ -1,6 +1,8 @@
-﻿@using WaffleDB.Component;
+﻿@using WaffleDB
+@using WaffleDBServer.Component
 
-<img id="banner" asp-append-version="true" src="Images/getranke_banner.png" />
+
+<img id="banner" asp-append-version="true" src="Images/waffel_banner.png" />
 
 @if (Products == null)
 {
@@ -9,12 +11,13 @@
 }
 else
 {
+
     <div style="padding-top: 24px;">
         @foreach (var item in Products)
         {
-            <div @onclick="() => OpenDialog(item)">
-                @*<ProductView Product="new Product(item.idProduct, item.idNuIn, item.price, item.name)"></ProductView>*@
-            </div>
+            <di @onclick="() => OpenDialog(item)">
+                <ProductView Product="new Product(item.idProduct, item.idNuIn, item.price, item.name)"></ProductView>
+            </di>
         }
     </div>
 
@@ -36,30 +39,25 @@ else
             <MatButton OnClick="@OkClick">OK</MatButton>
         </MatDialogActions>
     </MatDialog>
+
 }
-
 @code {
-
     [Parameter]
     public EventCallback<Tuple<int, int>> OrderedSomething { get; set; }
 
-    protected List<ProductAddition> Products = null;
+    protected List<ProductWaffle> Products = null;
 
-    protected ProductAddition LastClickedOnProduct = null;
+    protected ProductWaffle LastClickedOnProduct = null;
 
     bool dialogIsOpen = false;
     int Amount = -1;
 
     protected override async Task OnInitializedAsync()
     {
-        Products = await Task.Run(() => WaffleDBAPI.GetAllProductAdditions());
-
-        //Products = WaffleDBAPI.GetAllProductAdditions();
-
-        await base.OnInitializedAsync();
+        Products = await Task.Run(() => WaffleDBAPI.GetAllProductWaffles());
     }
 
-    void OpenDialog(ProductAddition product)
+    void OpenDialog(ProductWaffle product)
     {
         LastClickedOnProduct = product;
         Amount = 1;
@@ -75,8 +73,4 @@ else
         dialogIsOpen = false;
     }
 
-
-
-
-
-    }
+}
