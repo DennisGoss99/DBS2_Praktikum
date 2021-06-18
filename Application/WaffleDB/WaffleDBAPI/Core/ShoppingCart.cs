@@ -39,7 +39,7 @@ namespace WaffleDB
        
                     int time = WaffleDBAPI.FetchOrderTime(product.idProduct);
 
-                    timeSum += time;
+                    timeSum += (time * amount);
                 }
 
                 return timeSum;
