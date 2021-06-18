@@ -23,9 +23,9 @@ namespace WaffleDB
                     objectList = mysqlConnection.Query<T>(customSelectSQL).ToList();
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                // Do nothing
+                
             }
 
             return objectList;

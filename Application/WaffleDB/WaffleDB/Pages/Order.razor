@@ -22,10 +22,10 @@
                         <OrderSelectAddition OrderedSomething=@HandelReceivedAddToShoppingCart/>
                         break;
                     case OrderTypes.OrderPreMadeWaffles:
-                        <OrderSelectPreMadeWaffle OrderedSomething=@HandelReceivedAddToShoppingCart/>
+                        <OrderSelectPreMadeWaffle />
                         break;
                     case OrderTypes.OrderSelfMadeWaffles:
-                        <OrderSelectSelfMadeWaffle OrderedSomething=@HandelReceivedAddToShoppingCart/>
+                        <OrderSelectSelfMadeWaffle />
                         break;
                     case OrderTypes.ShoppingCart:
                         <ShoppingCart/>
@@ -57,7 +57,7 @@
     }
 
 
-    private void HandelReceivedAddToShoppingCart(Tuple<Product,int> value)
+    private void HandelReceivedAddToShoppingCart(Tuple<int,int> value)
     {
         ItemAmount += value.Item2;
     }
