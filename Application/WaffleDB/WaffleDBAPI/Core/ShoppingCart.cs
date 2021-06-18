@@ -26,6 +26,26 @@ namespace WaffleDB
             }            
         }
 
+        public int TimeToCompleteOrder
+        {
+            get
+            {
+                int timeSum = 0;
+
+                foreach (var item in ProductOrderList)
+                {
+                    IProduct product = item.Key;
+                    int amount = item.Value;
+       
+                    int time = WaffleDBAPI.FetchOrderTime(product.idProduct);
+
+                    timeSum += time;
+                }
+
+                return timeSum;
+            }
+        }
+
         public void FinishOrder(int storeID)
         {
             string sqlCommand = null;
