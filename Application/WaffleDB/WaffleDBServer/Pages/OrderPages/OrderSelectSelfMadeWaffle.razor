@@ -72,6 +72,7 @@ else
                     <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
                 </button>
             </div>
+            <MatTextField Style="margin-top: 10px;" Label="Name der Waffle" Value="Name"></MatTextField>
         </MatDialogContent>
         <MatDialogActions>
             <MatButton OnClick="@(e => { dialogIsOpen = false; })">Abbrechen</MatButton>
@@ -92,8 +93,12 @@ else
     bool dialogIsOpen = false;
     int Amount = -1;
 
+    string Name = "Eigene Waffle";  
+
     void OpenDialog()
     {
+
+
         Amount = 1;
         dialogIsOpen = true;
     }
@@ -101,9 +106,12 @@ else
     private async Task OkClick()
     {
 
-        Product createdWaffle = null;
 
-        //await OrderedSomething.InvokeAsync( new Tuple<Product, int>(createdWaffle, Amount));
+        var waffleIngredientList = WaffleConstruction.Where(k => k.Value != 0).Select(k => new KeyValuePair<int,int>(k.Key.idIngredient,k.Value)).ToList();
+
+        var waffle = WaffleDBAPI.CreateCustomWaffle(Name, waffleIngredientList);
+
+        await OrderedSomething.InvokeAsync( new Tuple<int, int>(waffle.idWaffle, Amount));
 
         dialogIsOpen = false;
     }
@@ -112,14 +120,7 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        List<Ingredient> ingredients = new List<Ingredient>()
-        {
-            new Ingredient() {name = "Waffle", price = 1.49f, processingTimeSec = 5, unit = "Stück"},
-            new Ingredient() {name = "Himbeeren", price = 1.49f, processingTimeSec = 5, unit = "50g"},
-            new Ingredient() {name = "Blaubeeren", price = 1.99f, processingTimeSec = 5, unit = "50g"},
-            new Ingredient() {name = "Puderzucker", price = 0.09f, processingTimeSec = 5, unit = "Portion"},
-            new Ingredient() {name = "Schokolade", price = 0.99f, processingTimeSec = 5, unit = "50g"}
-        };
+        List<Ingredient> ingredients = await Task.Run(() => WaffleDBAPI.GetAllIngredients());
 
         WaffleConstruction = ingredients.Select((i) =>
             new KeyValuePair<Ingredient, int>(i, 0)
