@@ -12,6 +12,14 @@ namespace WaffleDB
         private static string _connectionString { get => "Server=" + _ip + ";Database=" + _dataBaseName + ";Uid=root;Pwd=;"; }
 
 
+        private static T TableFetch<T>(string sqlMessage)
+        {
+            using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
+            {
+               return (T)mysqlConnection.Query<T>(sqlMessage);
+            }
+        }
+
         private static List<T> TableFetchAll<T>(string customSelectSQL)
         {
             List<T> objectList = null;
@@ -143,6 +151,10 @@ namespace WaffleDB
 
             productWaffle.Set(product, waffle);
 
+
+            // Get updated Waffle, triggers have changed it
+            productWaffle = GetProductWaffle(waffle.idWaffle);
+
             return productWaffle;
         }
 
@@ -164,6 +176,11 @@ namespace WaffleDB
             return waffleOrder;
         }
 
+
+        public static ProductWaffle GetProductWaffle(int waffleID)
+        {
+            return TableFetch<ProductWaffle>(ProductWaffle.SQLSelectCommand);
+        }
         public static List<ProductWaffle> GetAllProductWaffles()
         {
             return TableFetchAll<ProductWaffle>(ProductWaffle.SQLSelectCommand);

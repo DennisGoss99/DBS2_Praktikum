@@ -11,12 +11,12 @@
         public float protein { get; set; }
         public float salt { get; set; }
 
-        public NutritionalInformation() : this(-1, -1, -1, -1, -1, -1, -1, -1)
+        public NutritionalInformation() : this(0)
         {
 
         }
 
-        public NutritionalInformation(int idNuIn) : this(idNuIn, -1, -1, -1, -1, -1, -1, -1)
+        public NutritionalInformation(int idNuIn) : this(idNuIn, 0, 0, 0, 0, 0, 0, 0)
         {
 
         }
