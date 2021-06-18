@@ -12,15 +12,18 @@ namespace WaffleDB
         private static string _connectionString { get => "Server=" + _ip + ";Database=" + _dataBaseName + ";Uid=root;Pwd=;"; }
 
 
-        private static T TableFetch<T>(string sqlMessage)
+        private static T DataBaseFetchSingle<T>(string sqlMessage)
         {
             using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
             {
-               return (T)mysqlConnection.Query<T>(sqlMessage);
+                var dataBaseType = mysqlConnection.QueryFirst<T>(sqlMessage);
+                T castedType = (T)dataBaseType;
+
+                return castedType;
             }
         }
 
-        private static List<T> TableFetchAll<T>(string customSelectSQL)
+        private static List<T> DataBaseFetchAll<T>(string customSelectSQL)
         {
             List<T> objectList = null;
 
@@ -39,7 +42,7 @@ namespace WaffleDB
             return objectList;
         }
 
-        private static List<T> TableFetchAll<T>()
+        private static List<T> DataBaseFetchAll<T>()
         {
             string tableName = typeof(T).ToString();
             string sqlCommand = "SELECT * FROM " + tableName;
@@ -177,62 +180,67 @@ namespace WaffleDB
         }
 
 
+        public static int FetchOrderTime(int waffleID)
+        {
+            return DataBaseFetchSingle<int>("select OrderTimeCalculator(" + waffleID + ")");
+        }
+
         public static ProductWaffle GetProductWaffle(int waffleID)
         {
-            return TableFetch<ProductWaffle>(ProductWaffle.SQLSelectCommand);
+            return DataBaseFetchSingle<ProductWaffle>(ProductWaffle.SQLSelectCommand);
         }
         public static List<ProductWaffle> GetAllProductWaffles()
         {
-            return TableFetchAll<ProductWaffle>(ProductWaffle.SQLSelectCommand);
+            return DataBaseFetchAll<ProductWaffle>(ProductWaffle.SQLSelectCommand);
         }
         public static List<ProductAddition> GetAllProductAdditions()
         {
-            return TableFetchAll<ProductAddition>(ProductAddition.SQLSelectCommand);
+            return DataBaseFetchAll<ProductAddition>(ProductAddition.SQLSelectCommand);
         }
 
         public static List<Product> GetAllProducts()
         {
-            return TableFetchAll<Product>();
+            return DataBaseFetchAll<Product>();
         }
         public static List<Addition> GetAllAdditions()
         {
-            return TableFetchAll<Addition>();
+            return DataBaseFetchAll<Addition>();
         }
         public static List<Waffle> GetAllWaffles()
         {
-            return TableFetchAll<Waffle>();
+            return DataBaseFetchAll<Waffle>();
         }
         public static List<WaffleIngredient> GetAllWaffleIngredients()
         {
-            return TableFetchAll<WaffleIngredient>();
+            return DataBaseFetchAll<WaffleIngredient>();
         }
         public static List<Ingredient> GetAllIngredients()
         {
-            return TableFetchAll<Ingredient>();
+            return DataBaseFetchAll<Ingredient>();
         }
         public static List<NutritionalInformation> GetAllNutritionInformations()
         {
-            return TableFetchAll<NutritionalInformation>();
+            return DataBaseFetchAll<NutritionalInformation>();
         }
         public static List<Inventory> GetAllInventorys()
         {
-            return TableFetchAll<Inventory>();
+            return DataBaseFetchAll<Inventory>();
         }
         public static List<WaffleStore> GetAllWaffleStores()
         {
-            return TableFetchAll<WaffleStore>();
+            return DataBaseFetchAll<WaffleStore>();
         }
         public static List<PersonalNotification> GetAllPersonalNotifications()
         {
-            return TableFetchAll<PersonalNotification>();
+            return DataBaseFetchAll<PersonalNotification>();
         }
         public static List<WaffleOrder> GetAllWaffleOrders()
         {
-            return TableFetchAll<WaffleOrder>();
+            return DataBaseFetchAll<WaffleOrder>();
         }
         public static List<ProductOrder> GetAllProductOrders()
         {
-            return TableFetchAll<ProductOrder>();
+            return DataBaseFetchAll<ProductOrder>();
         }
     }
 }

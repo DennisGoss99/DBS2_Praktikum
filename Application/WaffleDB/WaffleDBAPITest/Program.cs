@@ -8,7 +8,9 @@ namespace WaffleDBAPITest
     {
         static int Main()
         {
-            PrintAllTables();
+            int wurst = WaffleDBAPI.FetchOrderTime(1);
+
+            //PrintAllTables();
 
             //BuildCustomWaffle(); // OK
             //BuyStuff(); // OK
