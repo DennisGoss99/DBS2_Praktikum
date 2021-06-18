@@ -21,9 +21,11 @@ namespace WaffleDBAPITest
         {
             ShoppingCart shoppingCart = new ShoppingCart();
 
-            shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(1, 1));
-            shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(2, 2));
-            shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(3, 5));
+            // cant implemetnt this
+
+            //shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(1, 1));
+            //shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(2, 2));
+            //shoppingCart.ProductOrderList.Add(new KeyValuePair<int, int>(3, 5));
 
             shoppingCart.FinishOrder(1);
         }
@@ -39,9 +41,9 @@ namespace WaffleDBAPITest
             ingredientList.Add(new KeyValuePair<int, int>(3, 10));
             ingredientList.Add(new KeyValuePair<int, int>(4, 50));
 
-            Waffle waffle = WaffleDBAPI.CreateCustomWaffle(waffleName, ingredientList);
+            ProductWaffle productWaffle = WaffleDBAPI.CreateCustomWaffle(waffleName, ingredientList);
 
-            Console.WriteLine("Waffle created <" + waffle.ToString() + ">");
+            Console.WriteLine("Waffle created <" + productWaffle.ToString() + ">");
         }
 
         private static void PrintAllTables()

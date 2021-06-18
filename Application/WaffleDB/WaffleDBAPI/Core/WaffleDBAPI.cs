@@ -12,6 +12,14 @@ namespace WaffleDB
         private static string _connectionString { get => "Server=" + _ip + ";Database=" + _dataBaseName + ";Uid=root;Pwd=;"; }
 
 
+        private static T TableFetch<T>(string sqlMessage)
+        {
+            using (MySqlConnection mysqlConnection = new MySqlConnection(_connectionString))
+            {
+               return (T)mysqlConnection.Query<T>(sqlMessage);
+            }
+        }
+
         private static List<T> TableFetchAll<T>(string customSelectSQL)
         {
             List<T> objectList = null;
@@ -100,10 +108,12 @@ namespace WaffleDB
         /// <param name="waffleName">Name of the Waffle</param>
         /// <param name="ingredientList">List of ingredients (IngredientID, Amount). Can't be empty.</param>
         /// <returns></returns>
-        public static Waffle CreateCustomWaffle(string waffleName, List<KeyValuePair<int, int>> ingredientList, string creatorName = "Unkown")
+        public static ProductWaffle CreateCustomWaffle(string waffleName, List<KeyValuePair<int, int>> ingredientList, string creatorName = "Unkown")
         {
             if (ingredientList.Count == 0)
                 return null;
+
+            ProductWaffle productWaffle = new ProductWaffle();
 
             //--- Create new nutritionalInformation ---------------------------
             int nutritionalInformationID = SQLGetInt("select max(idNuIn) from NutritionalInformation") + 1;
@@ -139,7 +149,13 @@ namespace WaffleDB
             }
             //-----------------------------------------------------------------
 
-            return waffle;
+            productWaffle.Set(product, waffle);
+
+
+            // Get updated Waffle, triggers have changed it
+            productWaffle = GetProductWaffle(waffle.idWaffle);
+
+            return productWaffle;
         }
 
         public static List<KeyValuePair<Ingredient, int>> GetIngredientsWithAmount()
@@ -160,6 +176,11 @@ namespace WaffleDB
             return waffleOrder;
         }
 
+
+        public static ProductWaffle GetProductWaffle(int waffleID)
+        {
+            return TableFetch<ProductWaffle>(ProductWaffle.SQLSelectCommand);
+        }
         public static List<ProductWaffle> GetAllProductWaffles()
         {
             return TableFetchAll<ProductWaffle>(ProductWaffle.SQLSelectCommand);

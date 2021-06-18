@@ -24,6 +24,21 @@ namespace WaffleDB
             get =>
                 "select * from Waffle " +
                 "inner join Product on Waffle.idWaffle = Product.idProduct";
-        }        
+        }      
+
+
+        public void Set(Product product, Waffle waffle)
+        {
+            idProduct = product.idProduct;
+            idNuIn = product.idNuIn;
+            price = product.price;
+            name = product.name;
+
+            idWaffle = waffle.idWaffle;
+            creatorName = waffle.creatorName;
+            creationDate = waffle.creationDate;
+            processingTimeSec = waffle.processingTimeSec;
+            healty = waffle.healty;
+        }
     }
 }

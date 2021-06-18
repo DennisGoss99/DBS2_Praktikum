@@ -11,7 +11,7 @@
         public float protein { get; set; }
         public float salt { get; set; }
 
-        public NutritionalInformation() : this(-1, -1, -1, -1, -1, -1, -1, -1)
+        public NutritionalInformation() : this(0)
         {
 
         }
