@@ -187,7 +187,12 @@ namespace WaffleDB
 
         public static ProductWaffle GetProductWaffle(int waffleID)
         {
-            return DataBaseFetchSingle<ProductWaffle>(ProductWaffle.SQLSelectCommand);
+            return DataBaseFetchSingle<ProductWaffle>
+                (
+                    "select * from Waffle " +
+                    " inner join Product on Waffle.idWaffle = Product.idProduct" +
+                    " where Waffle.idWaffle = " + waffleID
+                );
         }
         public static List<ProductWaffle> GetAllProductWaffles()
         {
