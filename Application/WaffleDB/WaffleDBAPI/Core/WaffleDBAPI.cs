@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace WaffleDB
 {
-    public class WaffleDBAPI 
+    public class WaffleDBAPI
     {
         private static string _ip { get => "127.0.0.1"; }
         private static string _dataBaseName { get => "waffleDB"; }
@@ -23,9 +23,9 @@ namespace WaffleDB
                     objectList = mysqlConnection.Query<T>(customSelectSQL).ToList();
                 }
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
-                
+                // Do nothing
             }
 
             return objectList;
@@ -33,7 +33,7 @@ namespace WaffleDB
 
         private static List<T> TableFetchAll<T>()
         {
-            string tableName = typeof(T).ToString(); 
+            string tableName = typeof(T).ToString();
             string sqlCommand = "SELECT * FROM " + tableName;
             List<T> objectList = null;
 
@@ -47,7 +47,7 @@ namespace WaffleDB
             catch (System.Exception)
             {
                 // Do nothing
-            }       
+            }
 
             return objectList;
         }
@@ -100,7 +100,7 @@ namespace WaffleDB
         /// <param name="waffleName">Name of the Waffle</param>
         /// <param name="ingredientList">List of ingredients (IngredientID, Amount). Can't be empty.</param>
         /// <returns></returns>
-        public static Waffle CreateCustomWaffle(string waffleName, List<KeyValuePair<int, int>> ingredientList)
+        public static Waffle CreateCustomWaffle(string waffleName, List<KeyValuePair<int, int>> ingredientList, string creatorName = "Unkown")
         {
             if (ingredientList.Count == 0)
                 return null;
@@ -114,14 +114,14 @@ namespace WaffleDB
 
             //--- Create new product ------------------------------------------
             int productID = SQLGetInt("select max(idProduct) from Product") + 1;
-            Product product = new Product(productID, nutritionalInformationID, -1, "Custom Waffle");
+            Product product = new Product(productID, nutritionalInformationID, -1, waffleName);
 
             SQLExecuteInsertEntry(product);
             //-----------------------------------------------------------------
 
             //--- Create new wallfe -------------------------------------------
             int waffleID = productID;
-            Waffle waffle = new Waffle(waffleID, waffleName);
+            Waffle waffle = new Waffle(waffleID, creatorName);
 
             SQLExecuteInsertEntry(waffle);
             //-----------------------------------------------------------------
@@ -142,11 +142,20 @@ namespace WaffleDB
             return waffle;
         }
 
+        public static List<KeyValuePair<Ingredient, int>> GetIngredientsWithAmount()
+        {
+            List<KeyValuePair<Ingredient, int>> ingredientsWithAmounts = new List<KeyValuePair<Ingredient, int>>();
+
+            // Ingredient join inventory -> store id &  amount & access
+
+            return ingredientsWithAmounts;
+        }
+
         public static WaffleOrder CreateNewWaffleOrder(int idStore)
         {
             int getNextID = SQLGetInt("select max(idOrder) from WaffleOrder") + 1;
 
-            WaffleOrder waffleOrder = new WaffleOrder(getNextID, idStore, 0, 0);            
+            WaffleOrder waffleOrder = new WaffleOrder(getNextID, idStore, 0, 0);
 
             return waffleOrder;
         }
