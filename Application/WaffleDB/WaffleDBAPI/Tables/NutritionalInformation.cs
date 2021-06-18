@@ -16,7 +16,7 @@
 
         }
 
-        public NutritionalInformation(int idNuIn) : this(idNuIn, -1, -1, -1, -1, -1, -1, -1)
+        public NutritionalInformation(int idNuIn) : this(idNuIn, 0, 0, 0, 0, 0, 0, 0)
         {
 
         }

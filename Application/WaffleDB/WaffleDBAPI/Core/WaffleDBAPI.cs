@@ -114,7 +114,7 @@ namespace WaffleDB
 
             //--- Create new product ------------------------------------------
             int productID = SQLGetInt("select max(idProduct) from Product") + 1;
-            Product product = new Product(productID, nutritionalInformationID, -1, waffleName);
+            Product product = new Product(productID, nutritionalInformationID, 0, waffleName);
 
             SQLExecuteInsertEntry(product);
             //-----------------------------------------------------------------
