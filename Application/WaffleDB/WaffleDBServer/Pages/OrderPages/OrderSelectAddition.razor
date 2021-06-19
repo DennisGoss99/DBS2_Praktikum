@@ -42,7 +42,7 @@ else
 @code {
 
     [Parameter]
-    public EventCallback<Tuple<int, int>> OrderedSomething { get; set; }
+    public EventCallback<Tuple<IProduct, int>> OrderedSomething { get; set; }
 
     protected List<ProductAddition> Products = null;
 
@@ -70,7 +70,7 @@ else
     {
 
         if (LastClickedOnProduct != null)
-            await OrderedSomething.InvokeAsync(new Tuple<int, int>(LastClickedOnProduct.idProduct, Amount));
+            await OrderedSomething.InvokeAsync(new Tuple<IProduct, int>(LastClickedOnProduct, Amount));
 
         dialogIsOpen = false;
     }

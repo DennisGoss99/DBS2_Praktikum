@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaffleDBAPI", "WaffleDBAPI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaffleDBAPITest", "WaffleDBAPITest\WaffleDBAPITest.csproj", "{3DD97DCC-D1EF-4E33-8C7F-91B9939E3101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaffleDBServer", "WaffleDBServer\WaffleDBServer.csproj", "{A55E4C70-289A-42D9-9E06-7635ED25834C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaffleDBServer", "WaffleDBServer\WaffleDBServer.csproj", "{A55E4C70-289A-42D9-9E06-7635ED25834C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
