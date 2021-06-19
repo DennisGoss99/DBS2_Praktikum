@@ -203,6 +203,10 @@ namespace WaffleDB
             return DataBaseFetchAll<ProductAddition>(ProductAddition.SQLSelectCommand);
         }
 
+        public static List<Ingredient> GetAllIngredientWaffleExtra()
+        {
+            return DataBaseFetchAll<Ingredient>("select * from Ingredient where canPutOnWaffle = 1");
+        }
         public static List<Product> GetAllProducts()
         {
             return DataBaseFetchAll<Product>();

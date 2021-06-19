@@ -67,6 +67,8 @@ namespace WaffleDBAPITest
 
         private static void PrintAllTables()
         {
+            PrintfCompleteList(WaffleDBAPI.GetAllIngredientWaffleExtra());
+
             PrintfCompleteList(WaffleDBAPI.GetAllProductAdditions());
             PrintfCompleteList(WaffleDBAPI.GetAllProductWaffles());
 

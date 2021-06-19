@@ -8,6 +8,7 @@
         public string unit { get; set; }
         public float price { get; set; }
         public int processingTimeSec { get; set; }
+        public int canPutOnWaffle { get; set; }
 
         public string TableName => "Ingredient";
         public string UpdateCommand =>
@@ -16,6 +17,7 @@
              "name = \"" + name + "\", " +
              "unit = \"" + unit + "\", " +
              "price = " + price + ", " +
+             "canPutOnWaffle = " + canPutOnWaffle + ", " +
              "processingTimeSec = " + processingTimeSec +
              " WHERE idIngredient = " + idIngredient;
         public string InsertCommand =>
@@ -26,6 +28,7 @@
             "\"" + name + "\"," +
             "\"" + unit + "\"," +
             price + "," +
+            canPutOnWaffle + 
             processingTimeSec +
             ")";
 
@@ -34,10 +37,11 @@
             return
                 "<Ingredient> idIngredient:" + idIngredient +
                 " idNuIn:" + idNuIn +
-                     " name:" + name +
-                          " unit:" + unit +
-                               " price:" + price +
-                               " processingTimeSec:" + processingTimeSec;
+                " name:" + name +
+                " unit:" + unit +
+                " price:" + price +
+                " processingTimeSec:" + processingTimeSec +
+                " canPutOnWaffle:" + canPutOnWaffle;
         }
     }
 }
