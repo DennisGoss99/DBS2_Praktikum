@@ -1,6 +1,6 @@
 ﻿@using System.IO
 @using WaffleDB
-<img id="banner" asp-append-version="true" src="Images/waffel_banner.png" />
+<img id="banner" asp-append-version="true" src="Images/waffel_create_banner.png" />
 <br/>
 
 @if (WaffleConstruction == null)
@@ -72,7 +72,7 @@ else
                     <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
                 </button>
             </div>
-            <MatTextField Style="margin-top: 10px;" Label="Name der Waffle" Value="Name"></MatTextField>
+            <MatTextField Style="margin-top: 10px;" Label="Name der Waffle" @bind-Value="Name"></MatTextField>
         </MatDialogContent>
         <MatDialogActions>
             <MatButton OnClick="@(e => { dialogIsOpen = false; })">Abbrechen</MatButton>
@@ -86,7 +86,7 @@ else
 @code {
 
     [Parameter]
-    public EventCallback<Tuple<int, int>> OrderedSomething { get; set; }
+    public EventCallback<Tuple<IProduct, int>> OrderedSomething { get; set; }
 
     protected Dictionary<Ingredient, int> WaffleConstruction;
 
@@ -109,9 +109,9 @@ else
 
         var waffleIngredientList = WaffleConstruction.Where(k => k.Value != 0).Select(k => new KeyValuePair<int,int>(k.Key.idIngredient,k.Value)).ToList();
 
-        var waffle = WaffleDBAPI.CreateCustomWaffle(Name, waffleIngredientList);
+        var waffle = WaffleDBAPI.CreateCustomWaffle(Name, waffleIngredientList.ToList());
 
-        await OrderedSomething.InvokeAsync( new Tuple<int, int>(waffle.idWaffle, Amount));
+        await OrderedSomething.InvokeAsync( new Tuple<IProduct, int>(waffle, Amount));
 
         dialogIsOpen = false;
     }
