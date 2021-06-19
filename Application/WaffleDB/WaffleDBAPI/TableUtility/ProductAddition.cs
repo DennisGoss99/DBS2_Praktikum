@@ -23,7 +23,7 @@
         {
             idProduct = id;
             idNuIn = -1;
-            price = id;
+            price = -1;
             name = null;
             idAddition = id;
             optComment = null;

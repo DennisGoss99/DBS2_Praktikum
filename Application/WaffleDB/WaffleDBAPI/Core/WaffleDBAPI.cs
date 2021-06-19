@@ -146,7 +146,7 @@ namespace WaffleDB
                 int ingredientID = item.Key;
                 int amount = item.Value;
 
-                WaffleIngredient waffleIngredient = new WaffleIngredient(ingredientID, waffleID, amount);
+                ProductIngredient waffleIngredient = new ProductIngredient(ingredientID, waffleID, amount);
 
                 SQLExecuteInsertEntry(waffleIngredient);
             }
@@ -215,9 +215,9 @@ namespace WaffleDB
         {
             return DataBaseFetchAll<Waffle>();
         }
-        public static List<WaffleIngredient> GetAllWaffleIngredients()
+        public static List<ProductIngredient> GetAllWaffleIngredients()
         {
-            return DataBaseFetchAll<WaffleIngredient>();
+            return DataBaseFetchAll<ProductIngredient>();
         }
         public static List<Ingredient> GetAllIngredients()
         {
