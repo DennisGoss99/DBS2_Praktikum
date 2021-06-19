@@ -10,6 +10,11 @@
 
         }
 
+        public Addition(int idAddition) : this(idAddition, null)
+        {
+
+        }
+
         public Addition(int idAddition, string optComment)
         {
             this.idAddition = idAddition;

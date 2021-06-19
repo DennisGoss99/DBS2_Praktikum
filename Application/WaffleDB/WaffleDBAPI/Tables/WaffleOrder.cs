@@ -10,7 +10,7 @@ namespace WaffleDB
         public int paymentStatus { get; set; }
         public DateTime orderDate { get; set; }
 
-        public WaffleOrder() : this(-1, -1,-1, -1)
+        public WaffleOrder() : this(-1)
         {
 
         }
@@ -29,12 +29,18 @@ namespace WaffleDB
             this.orderDate = DateTime.Now;
         }
 
+        public string DateFormatter(DateTime dateTime)
+        {
+            // 0000-00-00
+            return dateTime.Year.ToString("0000") + "-" + dateTime.Month.ToString("00") + "-" + dateTime.Day.ToString("00");
+        }
+
         public string TableName => "WaffleOrder";
         public string UpdateCommand =>
              "UPDATE " + TableName + " SET " +
              "totalAmount = " + totalAmount + "," +
              "paymentStatus = " + paymentStatus + "," +
-             "orderDate = \"" + orderDate + "\"" +
+             "orderDate = \"" + DateFormatter(orderDate) + "\"" +
              " WHERE idOrder = " + idOrder +
              " AND idStore = " + idStore;
         public string InsertCommand =>
@@ -44,7 +50,7 @@ namespace WaffleDB
             idStore + "," +
             totalAmount + "," +
             paymentStatus + "," +
-           "\"" + orderDate + "\"" +
+           "\"" + DateFormatter(orderDate) + "\"" +
             ")";
 
         public override string ToString()
