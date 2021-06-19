@@ -8,11 +8,11 @@ namespace WaffleDBAPITest
     {
         static int Main()
         {
-            //int wurst = WaffleDBAPI.FetchOrderTime(1);
-
-            BuyAddition();
+            //int wurst = WaffleDBAPI.FetchOrderTime(1);     
 
             PrintAllTables();
+
+            BuyAddition();
 
             //BuildCustomWaffle(); // OK
             //BuyStuff(); // OK
@@ -27,7 +27,7 @@ namespace WaffleDBAPITest
 
             // cant implemetnt this
 
-            shoppingCart.ProductOrderList.Add(new KeyValuePair<IProduct, int>(new ProductAddition(1), 1));
+            shoppingCart.ProductOrderList.Add(new KeyValuePair<IProduct, int>(new ProductAddition(8), 1));
 
             Console.WriteLine("Buying addition...");
 
