@@ -8,15 +8,32 @@ namespace WaffleDBAPITest
     {
         static int Main()
         {
-            int wurst = WaffleDBAPI.FetchOrderTime(1);
+            //int wurst = WaffleDBAPI.FetchOrderTime(1);
 
-            //PrintAllTables();
+            BuyAddition();
+
+            PrintAllTables();
 
             //BuildCustomWaffle(); // OK
             //BuyStuff(); // OK
 
             Console.ReadKey();
             return 0;
+        }
+
+        private static void BuyAddition()
+        {
+            ShoppingCart shoppingCart = new ShoppingCart();
+
+            // cant implemetnt this
+
+            shoppingCart.ProductOrderList.Add(new KeyValuePair<IProduct, int>(new ProductAddition(1), 1));
+
+            Console.WriteLine("Buying addition...");
+
+            shoppingCart.FinishOrder(1);
+
+            Console.WriteLine("Bought addition!");
         }
 
         private static void BuyStuff()

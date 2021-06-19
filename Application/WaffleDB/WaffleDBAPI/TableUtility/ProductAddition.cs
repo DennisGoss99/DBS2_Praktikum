@@ -14,6 +14,21 @@
         public string optComment { get; set; }
         //-------------------------------------------------
 
+        public ProductAddition() : this(-1)
+        {
+
+        }
+
+        public ProductAddition(int id)
+        {
+            idProduct = id;
+            idNuIn = -1;
+            price = id;
+            name = null;
+            idAddition = id;
+            optComment = null;
+        }
+
         public static string SQLSelectCommand 
         {
             get => 
