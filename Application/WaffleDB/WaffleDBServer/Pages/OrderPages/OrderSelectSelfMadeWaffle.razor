@@ -1,5 +1,5 @@
-﻿@using System.IO
-@using WaffleDB
+﻿@using WaffleDB
+
 <img id="banner" asp-append-version="true" src="Images/waffel_create_banner.png" />
 <br/>
 
@@ -120,7 +120,7 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        List<Ingredient> ingredients = await Task.Run(() => WaffleDBAPI.GetAllIngredients());
+        List<Ingredient> ingredients = await Task.Run(() => WaffleDBAPI.GetAllIngredientWaffleExtra());
 
         WaffleConstruction = ingredients.Select((i) =>
             new KeyValuePair<Ingredient, int>(i, 0)
