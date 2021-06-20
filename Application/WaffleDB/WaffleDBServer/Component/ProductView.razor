@@ -4,7 +4,7 @@
     @if (Product != null)
     {
     <div style="text-align: center">
-        <b class="price">@Product.price €</b><br />
+        <b class="price">@Product.price.ToString("F2") €</b><br />
         @switch (Product.idProduct)
         {
             case 1: //"BananenWaffel"

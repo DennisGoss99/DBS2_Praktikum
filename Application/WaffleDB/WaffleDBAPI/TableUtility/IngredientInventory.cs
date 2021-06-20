@@ -11,7 +11,14 @@ namespace WaffleDB
         public int idNuIn { get; set; }
         public string name { get; set; }
         public string unit { get; set; }
-        public float price { get; set; }
+        private float _price { get; set; }
+        public float price
+        {
+            get { return _price * 1.19f; }
+
+            set { _price = value; }
+
+        }
         public int processingTimeSec { get; set; }
         public int canPutOnWaffle { get; set; }
 

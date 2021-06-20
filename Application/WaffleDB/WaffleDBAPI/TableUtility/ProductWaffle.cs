@@ -10,7 +10,7 @@ namespace WaffleDB
         public float _price { get; set; }
         public float price 
         {
-            get { return (float) (_price * 1.19); }
+            get { return _price * 1.19f; }
 
             set { _price = value; } 
         

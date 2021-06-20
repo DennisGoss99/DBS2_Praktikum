@@ -15,7 +15,7 @@ else
     {
         <tr style="background: #F9F6F6">
             <td style="padding-left: 10px;" class="tableColumn">
-                <p>@ingredient.Key.name <b style="font-size: 9px;">( + @ingredient.Key.price €) @ingredient.Key.unit</b></p>
+                <p>@ingredient.Key.name <b style="font-size: 9px;">( + @ingredient.Key.price.ToString("F2") €) @ingredient.Key.unit</b></p>
             </td>
             <td class="tableColumn">
                 <div style="text-align: center;">
@@ -23,7 +23,7 @@ else
                         <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
                     </button>
                     <span>@ingredient.Value</span>
-                    <button style="margin-left: 15px;" class="dot" @onclick="()=> WaffleConstruction[ingredient.Key] = ingredient.Value + 1 ">
+                    <button disabled="@(ingredient.Key.amount <= ingredient.Value)" style="margin-left: 15px;" class="dot" @onclick="()=> WaffleConstruction[ingredient.Key] = ingredient.Value + 1 ">
                         <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
                     </button>
                 </div>
@@ -71,7 +71,7 @@ else
                     <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
                 </button>
                 <span style="position: relative; top: -3px">@Amount</span>
-                <button style="margin-left: 15px;" class="dot" @onclick="() => Amount++">
+                <button disabled="@WaffleConstruction.Any(i => (i.Value * Amount)+i.Value > i.Key.amount  )" style="margin-left: 15px;" class="dot" @onclick="() => Amount++">
                     <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
                 </button>
             </div>
@@ -91,12 +91,14 @@ else
     [Parameter]
     public EventCallback<Tuple<IProduct, int>> OrderedSomething { get; set; }
 
-    protected Dictionary<Ingredient, int> WaffleConstruction;
+    protected Dictionary<IngredientInventory, int> WaffleConstruction;
 
     bool dialogIsOpen = false;
     int Amount = -1;
 
-    string Name = "Eigene Waffle";  
+    string Name = "Eigene Waffle";
+
+    private const int StoreId = 1;
 
     void OpenDialog()
     {
@@ -117,16 +119,21 @@ else
         await OrderedSomething.InvokeAsync( new Tuple<IProduct, int>(waffle, Amount));
 
         dialogIsOpen = false;
+
+        Name = "Eigene Waffle";
+
+        WaffleConstruction = WaffleConstruction.ToDictionary(p => p.Key, p => 0); ;
+
     }
 
 
     protected override async Task OnInitializedAsync()
     {
 
-        List<Ingredient> ingredients = await Task.Run(() => WaffleDBAPI.GetAllIngredientWaffleExtra());
+        List<IngredientInventory> ingredients = await Task.Run(() => WaffleDBAPI.GetAllIngredientWaffleExtra());
 
         WaffleConstruction = ingredients.Select((i) =>
-            new KeyValuePair<Ingredient, int>(i, 0)
+            new KeyValuePair<IngredientInventory, int>(i, 0)
         ).ToDictionary(x=>x.Key, x=>x.Value);
 
         await base.OnInitializedAsync();

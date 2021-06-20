@@ -48,7 +48,7 @@
 
 @code {
 
-    
+
 
     protected int ItemAmount = 0;
 
@@ -68,7 +68,13 @@
 
         ItemAmount += value.Item2;
 
-        ShoppingCart.ProductOrderList.Add(new KeyValuePair<IProduct, int>(value.Item1,value.Item2));
+        if (ShoppingCart.ProductOrderList.Exists(p => p.Key.idProduct == value.Item1.idProduct))
+        {
+            int indexOfProduct = ShoppingCart.ProductOrderList.FindIndex(p => p.Key.idProduct == value.Item1.idProduct);
+            ShoppingCart.ProductOrderList[indexOfProduct] = new KeyValuePair<IProduct, int>(value.Item1, value.Item2 + ShoppingCart.ProductOrderList[indexOfProduct].Value);
+        }
+        else
+            ShoppingCart.ProductOrderList.Add(new KeyValuePair<IProduct, int>(value.Item1,value.Item2));
     }
 
 }

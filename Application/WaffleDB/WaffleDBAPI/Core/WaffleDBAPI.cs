@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System;
+using Dapper;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,7 +172,15 @@ namespace WaffleDB
 
         public static WaffleOrder CreateNewWaffleOrder(int idStore)
         {
-            int getNextID = SQLGetInt("select max(idOrder) from WaffleOrder") + 1;
+            int getNextID = 1;
+            try
+            {
+                getNextID = SQLGetInt("select max(idOrder) from WaffleOrder") + 1;
+            }
+            catch (Exception)
+            {
+            }
+            
 
             WaffleOrder waffleOrder = new WaffleOrder(getNextID, idStore, 0, 0);
 
@@ -202,9 +211,9 @@ namespace WaffleDB
             return DataBaseFetchAll<ProductAddition>(ProductAddition.SQLSelectCommand);
         }
 
-        public static List<IngredientInventory> GetAllIngredientWaffleExtra(int idStore)
+        public static List<IngredientInventory> GetAllIngredientWaffleExtra()
         {
-            return DataBaseFetchAll<IngredientInventory>(IngredientInventory.SQLSelectCommand + "WHERE canPutOnWaffle = 1 AND idStore =" + idStore);
+            return DataBaseFetchAll<IngredientInventory>(IngredientInventory.SQLSelectCommand + " WHERE canPutOnWaffle = 1 Order By Ingredient.idIngredient");
         }
         public static List<Product> GetAllProducts()
         {
