@@ -62,17 +62,20 @@ else
 
     <MatDialog @bind-IsOpen="@dialogIsOpen">
         <MatDialogContent>
-            <p>Anzahl:</p>
+            <MatTextField Style="margin-top: 10px;" Label="Name der Waffle" @bind-Value="Name"></MatTextField>
+            <br/>
+            <MatDivider></MatDivider>
+            <span style="position: relative;top: 30px;">Anzahl:</span>
             <div style="text-align: center">
-                <button disabled="@(Amount == 1)" style="margin-right: 15px;" class="dot" @onclick="()=> Amount--">
+                <button disabled="@(Amount == 1)" style="margin-right: 15px;" class="dot" @onclick="() => Amount--">
                     <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
                 </button>
-                <span>@Amount</span>
-                <button style="margin-left: 15px;" class="dot" @onclick="()=> Amount++">
+                <span style="position: relative; top: -3px">@Amount</span>
+                <button style="margin-left: 15px;" class="dot" @onclick="() => Amount++">
                     <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
                 </button>
             </div>
-            <MatTextField Style="margin-top: 10px;" Label="Name der Waffle" @bind-Value="Name"></MatTextField>
+
         </MatDialogContent>
         <MatDialogActions>
             <MatButton OnClick="@(e => { dialogIsOpen = false; })">Abbrechen</MatButton>
