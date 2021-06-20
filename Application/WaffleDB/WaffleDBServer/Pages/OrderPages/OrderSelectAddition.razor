@@ -26,7 +26,7 @@ else
                 <button disabled="@(Amount == 1)" style="margin-right: 15px;" class="dot" @onclick="() => Amount--">
                     <MatIcon Style="transform: scale(0.7)" Icon="remove"></MatIcon>
                 </button>
-                <span>@Amount</span>
+                <span style="position: relative; top: -3px">@Amount</span>
                 <button style="margin-left: 15px;" class="dot" @onclick="() => Amount++">
                     <MatIcon Style="transform: scale(0.7)" Icon="add"></MatIcon>
                 </button>
