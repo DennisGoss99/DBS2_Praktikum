@@ -5,7 +5,14 @@
         //--- Product ------------------------------------
         public int idProduct { get; set; }
         public int idNuIn { get; set; }
-        public float price { get; set; }
+        private float _price { get; set; }
+        public float price
+        {
+            get { return (float)(_price * 1.19); }
+
+            set { _price = value; }
+
+        }
         public string name { get; set; }
         //------------------------------------------------
 
@@ -23,7 +30,7 @@
         {
             idProduct = id;
             idNuIn = -1;
-            price = -1;
+            _price = -1;
             name = null;
             idAddition = id;
             optComment = null;

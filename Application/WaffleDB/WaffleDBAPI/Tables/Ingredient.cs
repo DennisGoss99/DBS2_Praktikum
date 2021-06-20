@@ -1,6 +1,6 @@
 ﻿namespace WaffleDB
 {
-    public class Ingredient : IDataBaseTable
+    public class Ingredient : IDataBaseTable, IIngredient
     {
         public int idIngredient { get; set; }
         public int idNuIn { get; set; }
@@ -28,7 +28,7 @@
             "\"" + name + "\"," +
             "\"" + unit + "\"," +
             price + "," +
-            canPutOnWaffle + 
+            canPutOnWaffle +
             processingTimeSec +
             ")";
 

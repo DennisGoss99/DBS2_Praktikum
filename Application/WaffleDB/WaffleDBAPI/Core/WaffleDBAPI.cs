@@ -104,7 +104,6 @@ namespace WaffleDB
         }
 
 
-
         /// <summary>
         /// Create a waffle and push it to the Database.
         /// </summary>
@@ -203,9 +202,9 @@ namespace WaffleDB
             return DataBaseFetchAll<ProductAddition>(ProductAddition.SQLSelectCommand);
         }
 
-        public static List<Ingredient> GetAllIngredientWaffleExtra()
+        public static List<IngredientInventory> GetAllIngredientWaffleExtra(int idStore)
         {
-            return DataBaseFetchAll<Ingredient>("select * from Ingredient where canPutOnWaffle = 1");
+            return DataBaseFetchAll<IngredientInventory>(IngredientInventory.SQLSelectCommand + "WHERE canPutOnWaffle = 1 AND idStore =" + idStore);
         }
         public static List<Product> GetAllProducts()
         {

@@ -2,7 +2,7 @@
 
 namespace WaffleDB
 {
-    public class Inventory : IDataBaseTable
+    public class Inventory : IDataBaseTable, IInventory
     {
         public int idInventory { get; set; }
         public int idIngredient { get; set; }

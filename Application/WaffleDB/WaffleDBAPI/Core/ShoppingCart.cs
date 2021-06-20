@@ -60,7 +60,7 @@ namespace WaffleDB
             {
                 int amount = item.Value;
                 IProduct product = item.Key;
-                int productID = product.idProduct;            
+                int productID = product.idProduct;   
 
                 ProductOrder productOrder = new ProductOrder(waffleOrder.idOrder, productID, amount);
 

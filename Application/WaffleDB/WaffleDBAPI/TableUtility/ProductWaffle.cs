@@ -7,7 +7,15 @@ namespace WaffleDB
         //--- Product ------------------------------------
         public int idProduct { get; set; }
         public int idNuIn { get; set; }
-        public float price { get; set; }
+        public float _price { get; set; }
+        public float price 
+        {
+            get { return (float) (_price * 1.19); }
+
+            set { _price = value; } 
+        
+        }
+
         public string name { get; set; }
         //------------------------------------------------
 
@@ -31,7 +39,7 @@ namespace WaffleDB
         {
             idProduct = product.idProduct;
             idNuIn = product.idNuIn;
-            price = product.price;
+            _price = product.price;
             name = product.name;
 
             idWaffle = waffle.idWaffle;
